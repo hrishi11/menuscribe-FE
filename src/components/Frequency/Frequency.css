@@ -1,0 +1,19 @@
+.frequencyContainer {
+  max-width: 230px;
+}
+.time-slots {
+}
+.timeSlot {
+  padding: 2px 4px;
+  border: 1px solid #333;
+  border-radius: 4px;
+  /* font-weight: 600; */
+  font-size: 15px;
+}
+.timeSlot.active {
+  background: orange;
+}
+
+.timeSlot:not(:last-child) {
+  margin-bottom: 5px;
+}

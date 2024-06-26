@@ -1,0 +1,22 @@
+.addPackageBody {
+  display: flex;
+  overflow: hidden;
+  gap: 10px;
+}
+.addPackageBody .left {
+  width: 80%;
+}
+.addPackageBody .right {
+  width: 20%;
+}
+@media (max-width: 768px) {
+  .addPackageBody {
+    flex-direction: column;
+  }
+  .addPackageBody .left {
+    width: auto;
+  }
+  .addPackageBody .right {
+    width: auto;
+  }
+}

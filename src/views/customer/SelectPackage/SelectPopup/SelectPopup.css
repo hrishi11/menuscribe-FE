@@ -1,0 +1,55 @@
+.selectPackage .form-check-input {
+  margin: 0;
+}
+.delivery-pickup.selectPackage {
+  justify-content: center;
+}
+.selectPackage .popupMainContainer {
+  width: 680px;
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 20px;
+}
+.selectPackage .popup {
+  display: flex;
+  background-color: transparent;
+  border-radius: 0;
+  padding: 0;
+}
+.selectPackagePopupLeft {
+  border-right: 1px solid #d3d3d3;
+  padding-right: 20px;
+  margin-right: 20px;
+  flex: 1;
+}
+.selectPackagePopupRight {
+  flex: 1;
+}
+.selectPackagePopupImg {
+  height: 220px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+@media (max-width: 768px) {
+  .selectPackage .popupMainContainer {
+    width: 280px;
+    height: 485px;
+    overflow-y: scroll;
+    margin-top: -140px;
+  }
+  .selectPackage .popup {
+    flex-direction: column;
+  }
+  .selectPackagePopupLeft {
+    border-right: none;
+    padding-right: 0;
+    margin-right: 0;
+  }
+  .selectPackagePopupRight {
+    margin-top: 30px;
+  }
+  .selectPackagePopupImg {
+    height: 180px;
+  }
+}

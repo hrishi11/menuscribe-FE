@@ -1,0 +1,84 @@
+.detailsRootContainer {
+  display: flex;
+  justify-content: space-between;
+  /* gap: 20px; */
+  max-width: 100vw;
+  overflow: hidden;
+}
+
+/* -----left section design----- */
+.leftBanner {
+  width: 50%;
+  min-height: 100vh;
+  background: linear-gradient(
+      to right,
+      rgba(27, 26, 26, 0.441),
+      rgba(27, 26, 26, 0.441)
+    ),
+    url("../../../assets/images/login-image.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: start;
+  align-items: center;
+  padding: 20px 10px;
+  color: white;
+  text-align: center;
+  position: relative;
+}
+.dFooter {
+  width: 100%;
+  background-color: #161616;
+  color: white;
+  padding: 10px;
+}
+
+.leftFooter {
+  position: absolute;
+  bottom: 0;
+}
+.rightFooter {
+  display: none;
+  border-radius: 10px;
+}
+
+.step-2-container {
+  min-height: 420px;
+}
+
+/* ------------Right container styles------ */
+.rightDetails {
+  padding: 20px 30px;
+  overflow: hidden;
+  width: 50%;
+  text-align: center;
+}
+/* -----------Responsive Design---------- */
+
+@media (max-width: 768px) {
+  .detailsRootContainer {
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .leftBanner {
+    width: 100%;
+    min-height: auto;
+  }
+  .leftBanner.hide-in-mobile {
+    display: none;
+  }
+
+  .leftFooter {
+    display: none;
+  }
+  .rightFooter {
+    display: block;
+  }
+
+  .rightDetails {
+    width: 100%;
+  }
+}

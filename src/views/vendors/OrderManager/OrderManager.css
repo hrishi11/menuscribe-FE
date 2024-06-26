@@ -1,0 +1,18 @@
+.ordersContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+}
+
+.orContainer{  
+  border-radius: 8px;
+  overflow-y: scroll;
+  height: 500px ;
+  background: white;
+}
+
+@media (max-width: 768px) {
+  .ordersContainer {
+    grid-template-columns: 1fr;
+  }
+}

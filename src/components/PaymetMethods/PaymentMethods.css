@@ -1,0 +1,13 @@
+.paymentMethodsContainer {
+  width: 40%;
+  padding: 12px;
+  background-color: #c7c6c6;
+  border-radius: 12px;
+  margin: 8px;
+}
+
+@media (max-width: 768px) {
+  .paymentMethodsContainer {
+    width: 100%;
+  }
+}

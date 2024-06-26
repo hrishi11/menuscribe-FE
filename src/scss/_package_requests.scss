@@ -1,0 +1,40 @@
+@media (max-width: 768px) {
+  .requestContainer {
+    flex-direction: column;
+  }
+  .flex-col-on-mobile {
+    width: auto;
+    display: flex;
+    flex-direction: column;
+  }
+  .flex-wrap-on-mobile {
+    flex-wrap: wrap;
+  }
+  .w-full-onMobile {
+    width: 100%;
+  }
+}
+@media (min-width: 769px) and (max-width: 1024px) {
+  .min-w-804-on-dextop {
+    max-width: 435px;
+  }
+  .min-h-72x {
+    min-height: 90px;
+  }
+}
+@media (min-width: 1025px) {
+  .min-w-804-on-dextop {
+    min-width: 804px;
+  }
+  .min-h-72x {
+    min-height: 72px;
+  }
+}
+// @media (min-width: 769px) {
+//   .min-w-804-on-dextop {
+//     min-width: 804px;
+//   }
+//   .min-h-72x {
+//     min-height: 72px;
+//   }
+// }

@@ -1,0 +1,15 @@
+.SingleDateContainer {
+  /* border: 1px solid #d3d3d3; */
+  padding: 4px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 8px;
+  background-color: #fff;
+}
+.SingleDateContainer.active {
+  background-color: rgb(245, 165, 18);
+}
+.SingleDateContainer h4 {
+  text-wrap: nowrap;
+}

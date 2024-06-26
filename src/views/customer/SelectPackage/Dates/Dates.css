@@ -1,0 +1,27 @@
+.allDatesContainer {
+  display: flex;
+  gap: 6px;
+  overflow-x: scroll;
+  scroll-snap-type: x mandatory; /* Enable snapping */
+}
+
+.allDatesContainer::-webkit-scrollbar {
+  width: 10px;
+}
+
+.allDatesContainer::-webkit-scrollbar-thumb {
+  background-color: #818b99;
+  border: 4px solid transparent;
+  border-radius: 9px;
+  background-clip: content-box;
+}
+
+.allDatesContainer::-webkit-scrollbar-track {
+  background-color: transparent; /* Background color of the track */
+  /* background-color: #dadada; */
+}
+
+.allDatesContainer > div {
+  scroll-snap-align: start; /* Snap each item to the start */
+  scroll-snap-stop: always; /* Ensure smooth scrolling */
+}

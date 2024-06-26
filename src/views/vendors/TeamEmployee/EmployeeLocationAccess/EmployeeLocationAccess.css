@@ -1,0 +1,26 @@
+.EmployeeLocationAccess {
+  grid-column: 3/4;
+}
+.locationsMainContainer {
+  background: #fff;
+  padding: 16px 16px;
+  border-radius: 12px;
+}
+.addedLocationsContainer {
+}
+.locationItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+}
+@media (max-width: 768px) {
+  .EmployeeLocationAccess {
+    grid-column: 1/2;
+    margin-top: 12px;
+  }
+  .locationsMainContainer {
+    padding: 12px 12px;
+    grid-template-columns: 1fr;
+  }
+}

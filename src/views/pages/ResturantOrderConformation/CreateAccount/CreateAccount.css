@@ -1,0 +1,8 @@
+.submitionForm {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+.submitionForm div.w-45 {
+  width: 45%;
+}

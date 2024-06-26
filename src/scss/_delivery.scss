@@ -1,0 +1,24 @@
+.LeftSectionOfEachDelivery{
+    flex: 1;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+.DatePicker{
+    max-width: 200px;
+}
+@media (max-width:768px) {
+    .LeftSectionOfEachDelivery{
+        flex-direction: column;
+        align-items: start;
+    }
+    .DatePicker{
+        max-width: 100px;
+    }
+}
+
+@media (min-width: 769px) {
+    .no-Selecting-on-md{
+        user-select: none;
+    }
+}

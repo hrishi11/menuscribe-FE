@@ -1,0 +1,39 @@
+.OrderConformationContainer {
+  margin-top: 30px;
+  margin-bottom: 30px;
+  width: 95%;
+  margin-left: auto;
+  margin-right: auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+}
+
+/* ---------Left--------- */
+.conformationLeft {
+  grid-column: 1/3;
+}
+/* ---------Right--------- */
+.conformationRight {
+  grid-column: 3/4;
+}
+
+.createAccountBtn {
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+
+@media (max-width: 768px) {
+  .OrderConformationContainer {
+    grid-template-columns: 1fr;
+  }
+
+  /* ---------Left--------- */
+  .conformationLeft {
+    grid-column: 1/2;
+  }
+  /* ---------Right--------- */
+  .conformationRight {
+    grid-column: 1/2;
+  }
+}

@@ -1,0 +1,8 @@
+.address-container {
+  width: 300px;
+  padding: 12px;
+  background: white;
+  border: 1px solid #383838;
+  border-radius: 4px;
+  min-height: 250px;
+}

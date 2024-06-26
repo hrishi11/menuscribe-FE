@@ -1,0 +1,42 @@
+.IconDetailContainer {
+}
+.package-request-icon {
+  min-width: 250px;
+  min-height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.CTAButtonsContainer {
+  display: flex;
+  gap: 40px;
+  align-items: center;
+  justify-content: center;
+  padding: 18px 0;
+  background: rgb(103, 103, 240);
+}
+.CTAButtons {
+  display: flex;
+  gap: 32px;
+  align-items: center;
+  justify-content: center;
+}
+@media (max-width: 768px) {
+  .IconDetailContainer {
+    flex-direction: column;
+  }
+  .package-request-icon {
+    min-width: 100%;
+  }
+  .CTAButtonsContainer {
+    flex-direction: column;
+    gap: 0;
+  }
+  .CTAButtons {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .CTAButtons > button {
+    width: 100%;
+  }
+}

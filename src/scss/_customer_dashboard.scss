@@ -1,0 +1,92 @@
+.customer-profile-dropdown {
+  top: 100%;
+  right: 50%;
+  box-shadow: -1px -1px 10px 0 gray;
+  min-width: 100px;
+  border-radius: 12px;
+}
+.nav-container .left {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.nav-link {
+  color: #616161;
+}
+.nav-link:hover {
+  color: #313131;
+}
+.nav-link.active {
+  color: black;
+}
+
+.customer-dashboard-hamburgur-menu {
+  width: 40px;
+  display: none;
+}
+
+.customerDashboardFooter {
+  background-color: #f9f9f9;
+  padding: 20px 0;
+}
+.CustomerDashboardMenuPopup {
+  min-width: 100vw;
+  min-height: 100vh;
+  background: #00000058;
+  position: fixed;
+  top: 0;
+  left: 0;
+  // display: none;
+  z-index: 10;
+}
+.navigation-popup {
+  width: 60%;
+  min-height: 100vh;
+  background-color: #8d8d8d;
+  color: white;
+  flex-direction: column;
+  align-items: center;
+  // justify-content: center;
+}
+.navigation-popup button {
+  color: white;
+}
+// -------------Body Design-----------------
+.customer-dashboard-body-divider {
+  display: flex;
+  gap: 30px;
+}
+.border-2x-graish {
+  border: 2px solid #f2f2f2;
+  border-radius: 5px;
+  // padding: 16px;
+}
+.customer-dashboard-body-divider .left {
+  width: 70%;
+}
+.customer-dashboard-body-divider .right {
+  width: 30%;
+}
+
+@media (max-width: 768px) {
+  .navigation {
+    display: none;
+  }
+  .customer-dashboard-hamburgur-menu {
+    display: inline-block;
+  }
+
+  //   -------Body Design-----------
+  .customer-dashboard-body-divider {
+    flex-direction: column;
+    padding: 0 12px;
+  }
+
+  .customer-dashboard-body-divider .left {
+    width: auto;
+  }
+  .customer-dashboard-body-divider .right {
+    width: auto;
+  }
+}

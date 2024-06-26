@@ -1,0 +1,3 @@
+.CompletedItem .accordion-button::before {
+  background-color: rgb(40, 167, 40);
+}

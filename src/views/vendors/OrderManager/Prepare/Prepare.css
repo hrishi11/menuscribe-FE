@@ -1,0 +1,9 @@
+.sectionBarContainer {
+  position: relative;
+}
+
+.printIcon {
+  position: absolute;
+  right: 8px;
+  top: 10px;
+}

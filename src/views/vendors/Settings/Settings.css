@@ -1,0 +1,18 @@
+.addressContainer {
+  width: 30%;
+}
+.active-promotions {
+  margin-bottom: 40px;
+}
+.serviceAreaContainer {
+  width: 30%;
+}
+
+@media (max-width: 768px) {
+  .addressContainer {
+    width: 100%;
+  }
+  .serviceAreaContainer {
+    width: 100%;
+  }
+}

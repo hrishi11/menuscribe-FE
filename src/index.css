@@ -1,0 +1,25 @@
+/* Aditional fonts */
+/* @import url("https://fonts.googleapis.com/css2?family=Teachers:ital,wght@0,400..800;1,400..800&display=swap"); */
+@import url("https://fonts.googleapis.com/css2?family=Teachers:ital,wght@0,400..800;1,400..800&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  /* font-family: "Briem Hand", cursive; */
+  /* font-family: "Open Sans", sans-serif;  */
+  font-family: "Teachers", sans-serif;
+}
+
+.pac-container {
+  z-index: 10000 !important;
+  width: 481px !important;
+  position: absolute !important;
+  left: 0 !important;
+  right: 0 !important;
+  display: block !important;
+  margin: auto;
+}
+.pac-container:empty {
+  display: none !important;
+}

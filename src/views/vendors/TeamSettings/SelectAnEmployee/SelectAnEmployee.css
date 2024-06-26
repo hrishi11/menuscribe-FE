@@ -1,0 +1,8 @@
+.selectAnEmployee {
+  max-width: 300px;
+}
+@media (max-width: 768px) {
+  .selectAnEmployee {
+    max-width: 100%;
+  }
+}

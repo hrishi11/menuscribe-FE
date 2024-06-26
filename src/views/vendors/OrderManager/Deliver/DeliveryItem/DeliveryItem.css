@@ -1,0 +1,9 @@
+.DeliveryItem .accordion-button::before {
+  background-color: #ffa500;
+  color: rgba(44, 56, 74, 0.95);
+}
+.itemsContainer {
+  margin-left: 8px;
+  font-size: 14px;
+  font-weight: 500;
+}

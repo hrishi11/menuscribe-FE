@@ -1,0 +1,16 @@
+.customer-dashboard-orders-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .customer-dashboard-orders-container {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 600px) {
+  .customer-dashboard-orders-container {
+    grid-template-columns: 1fr;
+  }
+}

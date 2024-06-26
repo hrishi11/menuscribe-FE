@@ -1,0 +1,22 @@
+.selectPage-outer-Container {
+  min-width: 100vw;
+  min-height: 100vh;
+  background: #e0e0e0;
+}
+.select-packages-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 18px;
+}
+@media (max-width: 768px) {
+  .select-packages-container {
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+}
+@media (max-width: 600px) {
+  .select-packages-container {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+}

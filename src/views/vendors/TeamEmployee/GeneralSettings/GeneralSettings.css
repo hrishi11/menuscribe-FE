@@ -1,0 +1,13 @@
+.generalSettingsFieldsContainer {
+  background: #fff;
+  display: flex;
+  justify-content: space-between;
+  padding: 16px 16px;
+  border-radius: 12px;
+}
+
+@media (max-width: 768px) {
+  .generalSettingsFieldsContainer {
+    flex-direction: column;
+  }
+}
