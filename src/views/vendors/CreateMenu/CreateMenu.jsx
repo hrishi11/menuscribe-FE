@@ -36,6 +36,8 @@ import {
   getCategories,
   updateVendorPackageItemQuantity,
   deleteMenuItemBox,
+  getVendorSettings,
+  deleteVendorMenuItem,
 } from "../../../actions/vendorReducers/VendorActions";
 import {
   arrayBufferToBase64,
@@ -61,6 +63,8 @@ import {
   Button,
   useDisclosure,
 } from "@nextui-org/react";
+import LimitModal from "../../../components/Modals/LimitModal";
+import DeleteModal from "../../../components/Modals/DeleteModal";
 
 const CreateMenu = () => {
   const initialFormData = {
@@ -79,7 +83,7 @@ const CreateMenu = () => {
   const [itemsData, setItemsData] = useState();
   const [packages, setPackages] = useState();
   const [validated, setValidated] = useState(false);
-  const [imageSrc, setImageSrc] = useState(null);
+  const [imageSrc, setImageSrc] = useState();
   const fileInputRef = createRef();
   const dispatch = useDispatch();
   const [imageFile, setImageFile] = useState("");
@@ -92,10 +96,27 @@ const CreateMenu = () => {
   const [categories, setCategories] = useState();
   const [changeTriger, setChangeTrigger] = useState();
   const [uploadedImage, setUploadedImage] = useState();
+
   const focusInput = useRef();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [deletedItem, setDeletedItem] = useState({
+    item_name: "",
+  });
+  const {
+    isOpen: isSecondOpen,
+    onOpen: onSecondOpen,
+    onOpenChange: onSecondOpenChange,
+  } = useDisclosure();
+  const {
+    isOpen: isThirdOpen,
+    onOpen: onThirdOpen,
+    onOpenChange: onThirdOpenChange,
+  } = useDisclosure();
+
+  const [limit, setLimit] = useState();
+
   useEffect(() => {
-    handleUserRole(["Admin", "Manager"]);
+    handleUserRole(["Owner", "Manager"]);
   }, []);
 
   const fetchData = async () => {
@@ -114,6 +135,9 @@ const CreateMenu = () => {
     }
   };
 
+  useEffect(() => {
+    console.log(imageSrc);
+  }, [imageSrc]);
   useEffect(() => {
     fetchData();
   }, []);
@@ -158,8 +182,27 @@ const CreateMenu = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (!(formData.item_quantity.length > 0)) {
+      Toast({ message: "You need to add atleast 1 size", type: "error" });
+      return;
+    }
+    if (!formData.id) {
+      const checkLimit = await dispatch(getVendorSettings());
+
+      if (
+        (checkLimit.data.no_of_menu_items ||
+          checkLimit.data.no_of_menu_items == 0) &&
+        itemsData.length >= checkLimit.data.no_of_menu_items
+      ) {
+        setLimit(checkLimit.data.no_of_menu_items);
+
+        onSecondOpen();
+        // setIsOpen2(true);
+        return;
+      }
+    }
     const form = event.currentTarget;
-    if (form.checkValidity() === false) {
+    if (form?.checkValidity() === false) {
       event.stopPropagation();
       setValidated(true);
     } else {
@@ -233,10 +276,16 @@ const CreateMenu = () => {
         veg: response.data.veg == 1 ? "veg" : "non-veg",
       });
       setImageFile(response.data.image);
-      const dataUrl = `data:image/jpeg;base64,${arrayBufferToBase64(
-        response.data.image.data
-      )}`;
-      setImageSrc(dataUrl);
+      if (response.data.image.data.length > 0) {
+        const dataUrl = `data:image/jpeg;base64,${arrayBufferToBase64(
+          response.data.image.data
+        )}`;
+        console.log("imageEnter", response.data.image.data);
+        setImageSrc(dataUrl);
+      } else {
+        setImageSrc(null);
+      }
+
       if (focusInput.current) {
         // Scroll to the input field
         focusInput.current.scrollIntoView({ behavior: "smooth" });
@@ -331,9 +380,6 @@ const CreateMenu = () => {
       setVisible(false);
       getPackageDetails(selectedPackage);
       fetchData();
-      // if (response && response.status === 'success') {
-      //     navigate('/manage/dashboard')
-      // }
     }
   };
 
@@ -418,8 +464,69 @@ const CreateMenu = () => {
 
     return result;
   };
+
+  const handleDeleteItem = async () => {
+    try {
+      const response = await dispatch(deleteVendorMenuItem(formData.id));
+
+      if (response.success) {
+        Toast({ message: "Item deleted successfully", type: "success" });
+        fetchData();
+        formData({});
+      } else {
+        Toast({ message: "Item Delete Error", type: "error" });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <CRow>
+      <LimitModal
+        name={"menu items"}
+        limit={limit}
+        isOpen={isSecondOpen}
+        onOpen={onSecondOpen}
+        onOpenChange={onSecondOpenChange}
+      />
+
+      {/* {deletedItem && ( */}
+      <DeleteModal
+        label={deletedItem.item_name}
+        isOpen={isThirdOpen}
+        onOpen={onThirdOpen}
+        onOpenChange={onThirdOpenChange}
+        handleDeleteItem={handleDeleteItem}
+      />
+      {/* )} */}
+
+      {/* <Modal isOpen={isSecondOpen} onOpenChange={onSecondOpenChange}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">
+                Limit Exceed
+              </ModalHeader>
+              <ModalBody>
+                <p>
+                  You have reached the maximum number of menu items. Your
+                  account only allows you to have {limit} menu items
+                </p>
+              </ModalBody>
+              <ModalFooter>
+                <Button
+                  color="danger"
+                  variant="light"
+                  onClick={setIsOpen2(false)}
+                >
+                  Close
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal> */}
+
       <Modal
         size={"4xl"}
         className=" max-sm:h-[700px] lg:h-[700] mt-10 max-sm:overflow-y-scroll"
@@ -538,15 +645,6 @@ const CreateMenu = () => {
                       {/* Mesurment */}
                       <CRow>
                         <CCol className="d-flex mt-2 gap-2 justify-between">
-                          {/* <CFormLabel className="me-3 mt-1 h6">
-                              NON-VEG
-                            </CFormLabel>
-                            <CFormSwitch
-                              name="veg"
-                              className="h5"
-                              onChange={handleInputChange}
-                              checked={formData.veg ? true : false}
-                            />*/}
                           <CFormLabel className=" mt-1 h6">VEG</CFormLabel>
                           <CFormSelect
                             className="simple-input "
@@ -571,19 +669,23 @@ const CreateMenu = () => {
                       <CRow>
                         <CCol className="mt-2 mb-2">
                           <div className="row justify-content-center">
-                            {imageSrc && (
-                              <img
-                                src={
-                                  formData && FormData.image
-                                    ? "aaaa"
-                                    : imageSrc || "placeholder-image.jpg"
-                                } // Provide a placeholder image source
-                                alt="Profile"
-                                className="circular-image img-fluid"
-                                width="200px"
-                                height="130px"
-                              />
-                            )}
+                            {/* {imageSrc && ( */}
+                            <img
+                              src={
+                                formData && FormData.image
+                                  ? FormData.image
+                                  : imageSrc
+                                  ? imageSrc
+                                  : formData.id
+                                  ? "https://agrimart.in/uploads/vendor_banner_image/default.jpg"
+                                  : "https://t4.ftcdn.net/jpg/05/65/22/41/360_F_565224180_QNRiRQkf9Fw0dKRoZGwUknmmfk51SuSS.jpg"
+                              } // Provide a placeholder image source
+                              alt="Profile"
+                              className="circular-image img-fluid"
+                              width="200px"
+                              height="130px"
+                            />
+                            {/* )} */}
                             <p
                               onClick={handleChooseFileClick}
                               className="text-primary cursor-pointer mt-2 text-center"
@@ -627,7 +729,7 @@ const CreateMenu = () => {
                           </div>
                         </CCol>
                       </CRow>
-
+                      {/* Item Size */}
                       <CRow className="justify-content-center pt-4">
                         <h6 className="text-center pb-2">Sizes</h6>
                         <CCol className="col-6">
@@ -672,7 +774,8 @@ const CreateMenu = () => {
                           </p>
                         </CRow>
                       </CRow>
-                      <CRow className="justify-content-center">
+                      {/* Buttons */}
+                      <CRow className="justify-content-center flex flex-col">
                         <CCol className=" mb-2 flex justify-center gap-2">
                           {formData.id && (
                             <Button
@@ -706,6 +809,23 @@ const CreateMenu = () => {
                             {formData.id ? "Update" : "Add"}
                           </Button>
                         </CCol>
+
+                        <CCol className="w-full flex justify-center mt-3">
+                          {formData.id && (
+                            <Button
+                              className=""
+                              color="danger"
+                              radius="sm"
+                              onClick={() => {
+                                setDeletedItem({ ...formData });
+                                onThirdOpen();
+                              }}
+                              variant="bordered"
+                            >
+                              Delete Item
+                            </Button>
+                          )}
+                        </CCol>
                       </CRow>
                     </CForm>
                   </CCol>
@@ -723,6 +843,7 @@ const CreateMenu = () => {
           )}
         </ModalContent>
       </Modal>
+
       <CRow>
         <CCol>
           <CCard className="mb-4">

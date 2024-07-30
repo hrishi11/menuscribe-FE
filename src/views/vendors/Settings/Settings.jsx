@@ -52,7 +52,7 @@ export const Settings = () => {
   // -------------Delete Popups-------------
 
   useEffect(() => {
-    handleUserRole("Admin");
+    handleUserRole("Owner");
     fetchVendorSetting();
   }, []);
 

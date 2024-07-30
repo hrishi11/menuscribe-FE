@@ -9,6 +9,7 @@ import {
 } from "@coreui/react";
 import {
   getCustomers,
+  getVendorSettings,
   setPaymentStatus,
 } from "../../actions/vendorReducers/VendorActions";
 import { useEffect, useState } from "react";
@@ -30,6 +31,8 @@ import {
 } from "../../actions/customerReducer/CustomerActions";
 import OrderCreationPopup from "../../components/Popup/OrderCreationPopup";
 import CancelPopup from "../../components/Popup/CancelPopup";
+import { useDisclosure } from "@nextui-org/react";
+import LimitModal from "../../components/Modals/LimitModal";
 const Customers = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -51,9 +54,10 @@ const Customers = () => {
   });
 
   const [reqObj, setReqObj] = useState({});
-
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [limit, setLimit] = useState();
   useEffect(() => {
-    handleUserRole("Admin");
+    handleUserRole("Owner");
   }, []);
 
   const fetchData = async () => {
@@ -110,8 +114,19 @@ const Customers = () => {
     }
   };
 
-  const handleAddCustomer = () => {
-    navigate(`/manage/add-customer`);
+  const handleAddCustomer = async () => {
+    const checkLimit = await dispatch(getVendorSettings());
+
+    if (
+      (checkLimit.data.no_of_customers ||
+        checkLimit.data.no_of_customers == 0) &&
+      customersData.length >= checkLimit.data.no_of_customers
+    ) {
+      setLimit(checkLimit.data.no_of_customers);
+      onOpen();
+    } else {
+      navigate(`/manage/add-customer`);
+    }
   };
   const handleEditCustomer = (id) => {
     navigate(`/manage/customers/${id}`);
@@ -283,6 +298,13 @@ const Customers = () => {
   return (
     <CRow>
       <CCol>
+        <LimitModal
+          name={"customers"}
+          limit={limit}
+          isOpen={isOpen}
+          onOpen={onOpen}
+          onOpenChange={onOpenChange}
+        />
         <CCard className="mb-4">
           <CCardHeader>
             <div className="d-flex justify-content-between">
@@ -364,7 +386,7 @@ const Customers = () => {
                                 <thead>
                                   <tr>
                                     <th> Package Name</th>
-                                    <th> Upcomming Orders</th>
+                                    <th> Upcoming Orders</th>
                                     <th> Subscription Expiry</th>
                                     <th> Renew</th>
                                     <th> </th>

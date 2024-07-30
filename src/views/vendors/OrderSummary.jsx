@@ -27,7 +27,7 @@ const OrderSummary = () => {
   const [selectedDate2, setSelectedDate2] = useState("");
 
   useEffect(() => {
-    handleUserRole(["Admin", "Manager"]);
+    handleUserRole(["Owner", "Manager"]);
     const date = new Date();
     handleSummarySelectedDate(date);
   }, []);

@@ -53,20 +53,7 @@ const AppSidebar = () => {
   return (
     // <>
     //   {width && (
-    <CSidebar
-      position="fixed"
-      // ref={backgroundRef}
-      // unfoldable={unfoldable}
-      visible={visible}
-      className="z-10"
-      // onVisibleChange={(visible) => {
-      //   dispatch({ type: 'set', sidebarShow: visible })
-      // }}
-      // onVisibleChange={(visible) => {
-      //   console.log("visibiletychange");
-      //   dispatch(appActions.setSidebarShow(visible));
-      // }}
-    >
+    <CSidebar position="fixed" visible={visible} style={{ zIndex: "1" }}>
       <CSidebarBrand className="d-none d-md-flex" to="/manage/dashboard">
         {/* <CIcon className="sidebar-brand-full" icon={logoNegative} height={35} />
         <CIcon className="sidebar-brand-narrow" icon={sygnet} height={35} /> */}

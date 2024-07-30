@@ -76,7 +76,7 @@ const Dashboard = () => {
     Math.floor(Math.random() * (max - min + 1) + min);
 
   useEffect(() => {
-    handleUserRole(["Admin"]);
+    handleUserRole(["Owner"]);
   }, []);
   const progressExample = [
     { title: "Visits", value: "29.703 Users", percent: 40, color: "success" },

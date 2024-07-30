@@ -72,7 +72,7 @@ const Package = ({ item, handleAddPackage }) => {
           <div className="items-container">
             {item.VendorPackageDefaultItems.map((ditem, index) => (
               <span className="d-block" key={index}>
-                - {ditem.item_name}
+                - {ditem.item_name} - {ditem.quantity}
               </span>
             ))}
           </div>

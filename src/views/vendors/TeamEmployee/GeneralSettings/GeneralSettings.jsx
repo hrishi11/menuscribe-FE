@@ -6,8 +6,9 @@ import {
   CFormSelect,
   CFormSwitch,
 } from "@coreui/react";
+import PhoneInput from "react-phone-input-2";
 
-const GeneralSettings = ({ selectedEmployee, setSelectedEmployee }) => {
+const GeneralSettings = ({ selectedEmployee, setSelectedEmployee, roles }) => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     const newEmployee = { ...selectedEmployee };
@@ -16,8 +17,9 @@ const GeneralSettings = ({ selectedEmployee, setSelectedEmployee }) => {
   };
   const handleRoleChange = (e) => {
     const { name, value } = e.target;
+    console.log(name);
     const newEmployee = { ...selectedEmployee };
-    newEmployee.role = value;
+    newEmployee.vendor_role_id = value;
     setSelectedEmployee(newEmployee);
   };
   const handleAccountAccessChange = (e) => {
@@ -37,7 +39,7 @@ const GeneralSettings = ({ selectedEmployee, setSelectedEmployee }) => {
             type="text"
             id="firstName"
             name="first_name"
-            value={selectedEmployee.UserVendor.first_name}
+            value={selectedEmployee?.UserVendor?.first_name}
             onChange={handleInputChange}
           />
         </div>
@@ -47,7 +49,7 @@ const GeneralSettings = ({ selectedEmployee, setSelectedEmployee }) => {
             type="text"
             id="lastName"
             name="last_name"
-            value={selectedEmployee.UserVendor.last_name}
+            value={selectedEmployee?.UserVendor?.last_name}
             onChange={handleInputChange}
           />
         </div>
@@ -56,13 +58,13 @@ const GeneralSettings = ({ selectedEmployee, setSelectedEmployee }) => {
           <CFormSelect
             id="role"
             name="role"
-            value={selectedEmployee.role}
+            value={selectedEmployee?.vendor_role_id}
             onChange={handleRoleChange}
           >
-            <option value="OWNER">OWNER</option>
-            <option value="MANAGER">MANAGER</option>
-            <option value="SERVER">SERVER</option>
-            <option value="DRIVER">DRIVER</option>
+            <option value="0">Select</option>
+            {roles.map((role) => (
+              <option value={role.id}>{role.role}</option>
+            ))}
           </CFormSelect>
         </div>
         <div>
@@ -71,7 +73,7 @@ const GeneralSettings = ({ selectedEmployee, setSelectedEmployee }) => {
             type="text"
             id="email"
             name="email"
-            value={selectedEmployee.UserVendor.email}
+            value={selectedEmployee?.UserVendor?.email}
             onChange={handleInputChange}
           />
         </div>
@@ -79,20 +81,33 @@ const GeneralSettings = ({ selectedEmployee, setSelectedEmployee }) => {
           <CFormLabel htmlFor="account_access"> Account Access </CFormLabel>
           <CFormSwitch
             id="formSwitchCheckDefault"
-            checked={selectedEmployee.status === 1}
+            checked={selectedEmployee?.status === 1}
             name="status"
             onChange={handleAccountAccessChange}
           />
         </div>
         <div>
           <CFormLabel htmlFor="phone"> Phone </CFormLabel>
-          <CFormInput
+          <PhoneInput
+            country={"ca"}
+            enableSearch={true}
+            style={{ width: "300px", height: "" }}
+            value={selectedEmployee?.UserVendor?.phone}
+            onChange={(phone) => {
+              console.log("phone", phone);
+              const newEmployee = { ...selectedEmployee };
+              newEmployee.UserVendor.phone = phone;
+              setSelectedEmployee(newEmployee);
+            }}
+            required
+          />
+          {/* <CFormInput
             type="text"
             id="phone"
             name="phone"
-            value={selectedEmployee.UserVendor.phone}
+            value={selectedEmployee?.UserVendor?.phone}
             onChange={handleInputChange}
-          />
+          /> */}
         </div>
       </div>
     </div>

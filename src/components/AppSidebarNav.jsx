@@ -4,7 +4,10 @@ import PropTypes from "prop-types";
 
 import { CBadge } from "@coreui/react";
 import { useDispatch } from "react-redux";
-import { getVendorEmployee } from "../actions/vendorReducers/VendorActions";
+import {
+  getVendorEmployee,
+  getVendorSettingsById,
+} from "../actions/vendorReducers/VendorActions";
 
 export const AppSidebarNav = ({ items }) => {
   const storedAuthData = JSON.parse(localStorage.getItem("menuScribe"));
@@ -15,15 +18,28 @@ export const AppSidebarNav = ({ items }) => {
   const fetchVendorEmployee = async () => {
     try {
       const VendorEmployeeId = localStorage.getItem("VendorEmployeeId");
-
-      const res = await dispatch(getVendorEmployee({ VendorEmployeeId }));
-      if (res.data) {
-        const FinalNavItems = [];
-        // console.log(res.data["add_customer_page"]);
-        items["Admin"]?.forEach(
-          (item) => res.data[item.pageAcc] === 1 && FinalNavItems.push(item)
-        );
-        setNavItems(FinalNavItems);
+      const Vendor = JSON.parse(localStorage.getItem("menuScribe"));
+      console.log("itemcasd", items, Vendor);
+      if (Vendor.type === "Owner") {
+        const res = await dispatch(getVendorSettingsById(Vendor.id));
+        if (res.data) {
+          const FinalNavItems = [];
+          // console.log(res.data["add_customer_page"]);
+          items["Owner"]?.forEach(
+            (item) => res.data[item.pageAcc] === 1 && FinalNavItems.push(item)
+          );
+          setNavItems(FinalNavItems);
+        }
+      } else {
+        const res = await dispatch(getVendorEmployee({ VendorEmployeeId }));
+        if (res.data) {
+          const FinalNavItems = [];
+          // console.log(res.data["add_customer_page"]);
+          items["Owner"]?.forEach(
+            (item) => res.data[item.pageAcc] === 1 && FinalNavItems.push(item)
+          );
+          setNavItems(FinalNavItems);
+        }
       }
     } catch (error) {
       console.log(error);

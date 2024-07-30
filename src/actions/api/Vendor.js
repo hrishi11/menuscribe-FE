@@ -85,6 +85,11 @@ export const getDeliveriesByCreatedDate = async (data) =>
 export const addDefaultItemToDay = async (data) =>
   API.post("/add-items-to-all-day", data);
 
+export const changeCustomerPackage = async (data) =>
+  API.post("/change-customer-package", data);
+export const deleteVendorMenuItem = async (id) =>
+  API.delete(`/delete-vendor-menu-item/${id}`);
+
 export const setCustomerOrderDelivery = async (data) =>
   API.post("set-delivered", data);
 export const getVendor = async () => API.get("get-vendor");
@@ -167,6 +172,26 @@ export const updateVendorPackageDefaultItems = async (data) =>
 
 export const getVendorEmployee = async (data) =>
   API.post("get-vendor-employee", data);
+
+export const setVendorSettings = async (data) =>
+  API.post("set-vendor-settings", data);
+export const getVendorSettings = async () => API.get("get-vendor-settings");
+
+export const getVendorSettingsById = async (id) =>
+  API.get(`get-vendor-setting-by-id/${id}`);
+export const getVendorSettingsByVendorId = async (id) =>
+  API.get(`get-vendor-settings-by-vendor-id/${id}`);
+export const getAllVendorPackages = async () =>
+  API.get(`get-all-vendor-packages`);
+export const getAllUserVendors = async () => API.get(`get-all-user-vendors`);
+export const createVendorSettings = async (data) =>
+  API.post(`create-vendor-settings`, data);
+export const createVendorTamplateDesigner = async (data) =>
+  API.post(`create-vendor-tamplate-designer`, data);
+export const getVendorTamplateDesigner = async () =>
+  API.get(`get-vendor-tamplate-designer`);
+export const getVendorTamplateInfo = async () =>
+  API.get(`get-vendor-tamplate-info`);
 // Customer package Requests
 export const getCustomerPackageRequests = async () =>
   API.get("get-customer-package-requests");
@@ -253,6 +278,7 @@ export const resendCustomerOtp = async (data) =>
 
 export const setVendorStoreInfo = async (data) =>
   API.post(`set-store-info`, data);
+export const getVendorRoles = async () => API.get(`get-vendor-roles`);
 
 export const customerSignup = async (data) => API.post(`customer-signup`, data);
 export const updateCustomerPhone = async (data) =>
@@ -275,7 +301,7 @@ export const deleteVendorDefaultItem = async (id) =>
   API.delete(`delete-vendor-default-item/${id}`);
 export const deletePackageImage = async (formData) =>
   API.post(`delete-package-image`, formData);
-export const getCustomerPaymentStatus = async (formData) =>
+export const getVendorBillingInfo = async (formData) =>
   API.get(
-    `get-customer-payment-status?page=${formData.page}&pageSize=${formData.pageSize}`
+    `get-vendor-billing-info?page=${formData.page}&pageSize=${formData.pageSize}`
   );

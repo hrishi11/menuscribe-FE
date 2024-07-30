@@ -15,6 +15,7 @@ import {
   getGlobalDefaultItems,
   getPackages,
   getServingMeasurements,
+  getVendorSettings,
   updateVendorPackageDefaultItems,
 } from "../../../actions/vendorReducers/VendorActions";
 import { useEffect, useState } from "react";
@@ -35,7 +36,8 @@ import {
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import { Tooltip } from "@coreui/coreui";
 import DefaultItemCreator from "./DefaultItemCreator/DefaultItemCreator";
-import { CardBody } from "@nextui-org/react";
+import { CardBody, useDisclosure } from "@nextui-org/react";
+import LimitModal from "../../../components/Modals/LimitModal";
 const Packages = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -70,9 +72,10 @@ const Packages = () => {
     vendor_category_id: "",
   });
   const [measurements, setMeasurements] = useState([]);
-
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [limit, setLimit] = useState();
   useEffect(() => {
-    handleUserRole(["Admin"]);
+    handleUserRole(["Owner"]);
     getCategoriesData();
     fetchMeasurements();
   }, []);
@@ -109,8 +112,18 @@ const Packages = () => {
   const handlePackageNavigate = (id) => {
     navigate(`/manage/add-package/${id}`);
   };
-  const handleAddPackage = () => {
-    navigate(`/manage/add-package`);
+  const handleAddPackage = async () => {
+    const checkLimit = await dispatch(getVendorSettings());
+
+    if (
+      (checkLimit.data.no_of_packages || checkLimit.data.no_of_packages) &&
+      packagesData.length >= checkLimit.data.no_of_packages
+    ) {
+      setLimit(checkLimit.data.no_of_packages);
+      onOpen();
+    } else {
+      navigate(`/manage/add-package`);
+    }
   };
   const fetchDefaultItems = async (req, res) => {
     try {
@@ -192,6 +205,13 @@ const Packages = () => {
   return (
     <CRow>
       <CCol className="flex flex-row-reverse gap-2">
+        <LimitModal
+          name={"packages"}
+          limit={limit}
+          isOpen={isOpen}
+          onOpen={onOpen}
+          onOpenChange={onOpenChange}
+        />
         <CModal
           visible={visible}
           onClose={() => setVisible(false)}

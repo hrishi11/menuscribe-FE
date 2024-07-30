@@ -83,6 +83,18 @@ export const CustomerDashboardHeader = ({ activeKey, setActiveKey }) => {
               <NavLink to="/add-package" className="customer-nav-link">
                 Add Packages
               </NavLink>
+              <NavLink to="/orders" className="customer-nav-link">
+                Orders
+              </NavLink>
+              <NavLink to="/package-selector" className="customer-nav-link">
+                Package Selector
+              </NavLink>
+              <NavLink to="/tp-home" className="customer-nav-link">
+                TP Home
+              </NavLink>
+              <NavLink to="/billing" className="customer-nav-link">
+                Billing
+              </NavLink>
             </CNavItem>
 
             {/* <CNavItem role="presentation">

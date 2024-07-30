@@ -57,11 +57,14 @@ export default function ManagerSignup() {
   const dispatch = useDispatch();
   const [cities, setCities] = useState();
   const [autocomplete, setAutocomplete] = useState(null);
+  const [getPostal, setGetPostal] = useState([]);
   const [postalRegion, setPostalRegion] = useState([]);
+  const [selectedPostal, setSelectedPostal] = useState([]);
   const [locations, setLocations] = useState([]);
   const [pickupOption, setPickupOption] = useState();
   const [deliveryOption, setDeliveryOption] = useState();
-
+  const inputRef = useRef(null);
+  const dropdownRef = useRef(null);
   //   const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
   //   const checkedIcon = <CheckBoxIcon fontSize="small" />;
   useEffect(() => {
@@ -93,18 +96,29 @@ export default function ManagerSignup() {
   const fetchPostalRegions = async () => {
     try {
       const response = await dispatch(getPostalRegions());
-      const info = response.data.map((item) => {
+      let info = response.data.map((item) => {
         return {
-          value: `${item.CITY}-${item.POSTAL_CODE}`,
-          label: `${item.CITY}-${item.POSTAL_CODE}`,
+          // value: `${item.CITY}-${item.POSTAL_CODE}`,
+          // label: `${item.CITY}-${item.POSTAL_CODE}`,
+          value: item.CITY,
+          label: item.CITY,
           postal_region_id: item.id,
         };
       });
-
-      setPostalRegion(info);
+      const data = removeDuplicates(info);
+      setGetPostal(response.data);
+      setPostalRegion(data);
     } catch (error) {
       console.log(error);
     }
+  };
+  const removeDuplicates = (arr) => {
+    const seen = new Set();
+    return arr.filter((item) => {
+      const isDuplicate = seen.has(item.label);
+      seen.add(item.label);
+      return !isDuplicate;
+    });
   };
   const handleInputPaste = (event) => {
     event.preventDefault();
@@ -115,6 +129,15 @@ export default function ManagerSignup() {
     otpInputs.current[5].focus();
   };
 
+  const handleBlur = async () => {
+    try {
+      // await google.maps.event.clearListeners(autocomplete, "place_changed");
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
+  const handleFocus = () => {};
   const handleInputFocus = (index) => {
     otpInputs.current[index].scrollIntoView({
       behavior: "smooth",
@@ -255,7 +278,7 @@ export default function ManagerSignup() {
     );
     const lat = place.geometry.location.lat();
     const lng = place.geometry.location.lng();
-    const postal = postalCodeComponent?.short_name
+    const getPostal = postalCodeComponent?.short_name
       ? postalCodeComponent.short_name
       : "";
     const city = cityComponent ? cityComponent.long_name : "";
@@ -269,7 +292,7 @@ export default function ManagerSignup() {
     setStoreInfo((prevData) => ({
       ...prevData,
       address,
-      postal: postal ? postal : "",
+      getPostal: getPostal ? getPostal : "",
       city,
       city_id: city_id?.id,
       latitude: lat,
@@ -289,6 +312,7 @@ export default function ManagerSignup() {
 
           return;
         }
+        console.log("locations", locations);
         await dispatch(
           setVendorStoreInfo({
             ...storeInfo,
@@ -480,7 +504,7 @@ export default function ManagerSignup() {
                 </div>
               </div>
               <span className="">
-                Don't receive the code?{" "}
+                Didn't receive the code?{" "}
                 <span className="text-purple-500">
                   Click here to send again
                 </span>
@@ -495,7 +519,7 @@ export default function ManagerSignup() {
               </Button>
             </form>
           </div>
-
+          {/* Store Info */}
           <div className="justify-center flex flex-col gap-4 items-center h-full">
             <form
               onSubmit={(e) => {
@@ -558,6 +582,7 @@ export default function ManagerSignup() {
             </form>
           </div>
 
+          {/* Store Address */}
           <div className="justify-center flex flex-col gap-4 items-center h-full">
             <form
               onSubmit={(e) => {
@@ -580,13 +605,17 @@ export default function ManagerSignup() {
                   >
                     <Autocomplete
                       className="w-[450px]"
-                      onLoad={(autocomplete) => {
-                        setAutocomplete(autocomplete);
+                      options={{
+                        componentRestrictions: { country: "ca" },
                       }}
-                      onPlaceChanged={() => {
-                        autocomplete?.getPlace() &&
-                          handlePlaceSelect(autocomplete.getPlace());
-                      }}
+                      // onLoad={(autocomplete) => {
+                      //   setAutocomplete(autocomplete);
+                      // }}
+                      // onPlaceChanged={() => {
+                      //   autocomplete?.getPlace() &&
+                      //     handlePlaceSelect(autocomplete.getPlace());
+                      //   // google.maps.event.clearInstanceListeners(autocomplete);
+                      // }}
                     >
                       <CFormInput
                         className="w-[450px]"
@@ -595,12 +624,14 @@ export default function ManagerSignup() {
                         placeholder="Enter your address"
                         required={true}
                         value={storeInfo.address}
-                        onChange={(e) =>
+                        onBlur={handleBlur}
+                        onFocus={handleFocus}
+                        onChange={(e) => {
                           setStoreInfo((pre) => ({
                             ...storeInfo,
                             address: e.target.value,
-                          }))
-                        }
+                          }));
+                        }}
                       />
                     </Autocomplete>
                   </LoadScript>
@@ -628,15 +659,15 @@ export default function ManagerSignup() {
                       className="w-[450px]"
                       isRequired={true}
                       type="text"
-                      name="postal"
+                      name="getPostal"
                       required={true}
                       onChange={(e) =>
                         setStoreInfo((pre) => ({
                           ...pre,
-                          postal: e.target.value,
+                          getPostal: e.target.value,
                         }))
                       }
-                      value={storeInfo.postal}
+                      value={storeInfo.getPostal}
                     />
                   </span>
                   <span className="w-[450px]">
@@ -719,7 +750,7 @@ export default function ManagerSignup() {
             </form>
           </div>
 
-          <div className="justify-center flex flex-col gap-4 items-center h-full">
+          <div className="  flex flex-col gap-4 ">
             <form
               onSubmit={handleSaveStoreInfo}
               className="justify-center flex flex-col gap-2 items-center h-full"
@@ -734,11 +765,8 @@ export default function ManagerSignup() {
                   <div>
                     <div className="flex bg-gray-200 p-3 rounded-tl-lg rounded-tr-lg">
                       <span>
-                        <h4>Delivery (powered by Cookin)</h4>
-                        <p>
-                          Cookin will connect you and your customers through our
-                          3rd party driver network. Deliver like restaurant.
-                        </p>
+                        <h4>Delivery</h4>
+                        <p>You deliver meals to the customer.</p>
                       </span>
                       <Checkbox
                         {...label}
@@ -750,24 +778,53 @@ export default function ManagerSignup() {
                       />
                     </div>
                     {deliveryOption == 1 && (
-                      <div className="border flex flex-col items-center justify-center">
-                        <span className="py-5 flex flex-col items-center justify-center">
-                          <h5>Select the cities that you deliver</h5>
-                          <p>You can change this at any time</p>
-                          <div className="relative flex justify-center">
-                            <Select
-                              mode="multiple"
-                              allowClear
-                              style={{ width: "400px" }}
-                              placeholder="Please select"
-                              // defaultValue={["a10", "c12"]}
-                              onChange={(e, val) => {
-                                console.log("values", val, e);
-                                return setLocations(val);
-                              }}
-                              options={postalRegion}
-                            />
-                            {/* <AutoComp
+                      <div className="border flex flex-col m-auto max-h-[250px] overflow-y-scroll   items-center ">
+                        <div className="p-4 flex ">
+                          <span className=" flex flex-col items-center justify-center">
+                            <h5>Select the cities that you deliver</h5>
+                            <p>You can change this at any time</p>
+                            <div className="relative flex flex-col gap-2  justify-center">
+                              <Select
+                                mode="multiple"
+                                allowClear
+                                style={{ width: "400px" }}
+                                placeholder="Please select"
+                                onChange={(e, val) => {
+                                  let loc = [];
+
+                                  val.forEach((item) => {
+                                    const data = getPostal.filter(
+                                      (region) => region.CITY === item.label
+                                    );
+                                    // console.log(data);
+                                    loc.push({ ...item, location: [...data] });
+                                  });
+                                  return setLocations(loc);
+                                }}
+                                options={postalRegion}
+                              />
+                              <div className="flex flex-col gap-1 w-[400px]">
+                                {locations.length > 0 &&
+                                  locations.map((region) => (
+                                    <>
+                                      <span className="font-semibold">
+                                        {region.label}:{" "}
+                                      </span>
+                                      <span>
+                                        {region.location?.map((item, index) => (
+                                          <span>
+                                            {item.POSTAL_CODE}{" "}
+                                            {region.location?.length ==
+                                            index + 1
+                                              ? " "
+                                              : ","}{" "}
+                                          </span>
+                                        ))}
+                                      </span>
+                                    </>
+                                  ))}
+                              </div>
+                              {/* <AutoComp
                               multiple
                               id="checkboxes-tags-demo"
                               className=""
@@ -806,14 +863,15 @@ export default function ManagerSignup() {
                                 />
                               )}
                             /> */}
-                            {/* <CButton
+                              {/* <CButton
                             className="my-10x"
                             onClick={() => handleLocationSave()}
                           >
                             SAVE
                           </CButton> */}
-                          </div>
-                        </span>
+                            </div>
+                          </span>
+                        </div>{" "}
                       </div>
                     )}
                   </div>
@@ -873,24 +931,13 @@ export default function ManagerSignup() {
             }
           />
 
-          <Detail
-            title={"Our food"}
-            desc={
-              "Our food is delicious and highly rated amongst our customers. We hope you enjoy our food too."
-            }
-          />
-
-          <Detail
-            title={"Our service areas"}
-            desc={
-              "We service Brampton, Mississauga, Hamilton, Toronto, Oakville, Scarborough, and Caledon."
-            }
-          />
-
           <footer className="absolute w-[50%] flex flex-col justify-center items-center gap-0 z-10 bg-black text-white text-[14px] h-[10%] bottom-0">
-            <span>CONTACT TAJ MAHAL</span>
-            <span>PHONE: 234234234</span>
-            <span>EMAIL: public@mail.com</span>
+            <span>©2024 Menuscribe</span>
+
+            <span>
+              <strong>Need support?</strong> Contact your Menuscribe
+              representative
+            </span>
           </footer>
         </section>
       </div>

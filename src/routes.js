@@ -19,6 +19,8 @@ import UploadUsers from "./views/vendors/UploadUsers/UploadUsers";
 import WebsiteSettings from "./views/vendors/WebsiteSetting/WebsiteSetting";
 import Payments from "./views/vendors/Payments/Payments";
 import Billing from "./views/vendors/Billing/Billing";
+import VendorManagement from "./views/vendors/VendorManagement/VendorManagement";
+import AdDesigner from "./views/vendors/AdDesigner.jsx/AdDesigner";
 // import ViewCustomer from "./views/vendors/ViewCustomer";
 
 //menuScribe
@@ -184,7 +186,7 @@ const routes = [
     path: "/manage/dashboard",
     name: "Dashboard",
     element: Dashboard,
-    pageAcc: "homepage",
+    pageAcc: "dashboard_page",
     type: "private",
   },
   {
@@ -192,7 +194,7 @@ const routes = [
     name: "Customers",
     element: Customers,
     pageAcc: "customers_page",
-    allowRole: ["Admin", "Manager", "admin"],
+    allowRole: ["Owner", "Manager", "admin"],
   },
 
   {
@@ -201,23 +203,32 @@ const routes = [
     element: CustomersEdit,
     pageAcc: "customers_page",
     type: "private",
-    allowRole: ["Admin", "Manager", "admin"],
+    allowRole: ["Owner", "Manager", "admin"],
   },
   {
     path: "/manage/add-customer",
     name: "AddCustomer",
     element: AddCustomer,
-    pageAcc: "add_customer_page",
+    pageAcc: "customers_page",
     type: "private",
-    allowRole: ["Admin", "Manager", "admin"],
+    allowRole: ["Owner", "Manager", "admin"],
   },
   {
     path: "/manage/view-customers/:id",
     name: "AddCustomer",
     element: ViewCustomer,
-    pageAcc: "add_customer_page",
+    pageAcc: "customers_page",
     type: "private",
-    allowRole: ["Admin", "Manager", "admin"],
+    allowRole: ["Owner", "Manager", "admin"],
+  },
+  {
+    path: "/manage/vendor-manager/",
+    name: "Vendor Manager",
+    element: VendorManagement,
+    pageAcc: "website_admin",
+
+    type: "private",
+    allowRole: ["Owner", "Manager", "admin"],
   },
   {
     path: "/manage/package/detail/:id",
@@ -225,61 +236,70 @@ const routes = [
     element: PackageDetail,
     pageAcc: "packages_page",
     type: "private",
-    allowRole: ["Admin", "Manager", "admin"],
+    allowRole: ["Owner", "Manager", "admin"],
   },
   {
     path: "/manage/holidays",
     name: "Holidays",
     element: Holidays,
-    pageAcc: "add_customer_page",
+    pageAcc: "holidays",
     type: "private",
-    allowRole: ["Admin", "Manager", "admin"],
+    allowRole: ["Owner", "Manager", "admin"],
   },
 
   {
     path: "/manage/create-menu",
-    name: "CreateMenu",
+    name: "Create Menu",
     element: CreateMenu,
-    pageAcc: "menu_page",
+    pageAcc: "create_menu_page",
     // element: Temp,
     type: "private",
-    allowRole: ["Admin", "Manager", "admin"],
+    allowRole: ["Owner", "Manager", "admin"],
   },
   {
     path: "/manage/payments",
     name: "Payments",
     element: Payments,
-    pageAcc: "menu_page",
+    pageAcc: "payments_page",
     // element: Temp,
     type: "private",
-    allowRole: ["Admin", "Manager", "admin"],
+    allowRole: ["Owner", "Manager", "admin"],
+  },
+  {
+    path: "/manage/ad-designer",
+    name: "Ad Designer",
+    element: AdDesigner,
+    pageAcc: "ad_desginer_page",
+    // element: Temp,
+    type: "private",
+    allowRole: ["Owner", "Manager", "admin"],
   },
   {
     path: "/manage/billing",
     name: "Billing",
     element: Billing,
-    pageAcc: "menu_page",
+    pageAcc: "billing_page",
     // element: Temp,
     type: "private",
-    allowRole: ["Admin", "Manager", "admin"],
+    allowRole: ["Owner", "Manager", "admin"],
   },
   {
     path: "/manage/multi-menu-editor",
     name: "Multiple Menu Editor",
     element: MultiMenuEditor,
-    pageAcc: "menu_page",
+    pageAcc: "multiple_menu_editor_page",
     // element: Temp,
     type: "private",
-    allowRole: ["Admin", "Manager", "admin"],
+    allowRole: ["Owner", "Manager", "admin"],
   },
   {
     path: "/manage/get-started",
     name: "Get started",
     element: GetStarted,
-    pageAcc: "menu_page",
+    pageAcc: "get_started_page",
     // element: Temp,
     type: "private",
-    allowRole: ["Admin", "Manager", "admin"],
+    allowRole: ["Owner", "Manager", "admin"],
   },
 
   {
@@ -288,7 +308,7 @@ const routes = [
     element: Packages,
     pageAcc: "packages_page",
     type: "private",
-    // allowRole: ["Admin", "Manager", "admin"],
+    // allowRole: ["Owner", "Manager", "admin"],
   },
   {
     path: "/manage/pacakge-requests",
@@ -296,23 +316,23 @@ const routes = [
     element: PackageRequest,
     pageAcc: "package_requests_page",
     type: "private",
-    allowRole: ["Admin", "Manager", "admin"],
+    allowRole: ["Owner", "Manager", "admin"],
   },
   {
     path: "/manage/website-settings",
     name: "Website Setting",
     element: WebsiteSettings,
-    pageAcc: "package_requests_page",
+    pageAcc: "website_setting_page",
     type: "private",
-    allowRole: ["Admin", "Manager", "admin"],
+    allowRole: ["Owner", "Manager", "admin"],
   },
   {
     path: "/manage/upload-users",
     name: "Upload Users",
     element: UploadUsers,
-    pageAcc: "package_requests_page",
+    pageAcc: "upload_users_page",
     type: "private",
-    allowRole: ["Admin", "Manager", "admin"],
+    allowRole: ["Owner", "Manager", "admin"],
   },
   {
     path: "/manage/pickups",
@@ -320,24 +340,24 @@ const routes = [
     element: Pickups,
     pageAcc: "pickups_page",
     type: "private",
-    allowRole: ["Admin", "Manager", "admin"],
+    allowRole: ["Owner", "Manager", "admin"],
   },
   {
     path: "/manage/add-package",
     name: "AddPackage",
     element: AddPackage,
-    pageAcc: "add_package_page",
+    pageAcc: "packages_page",
     type: "private",
-    allowRole: ["Admin", "Manager", "admin"],
+    allowRole: ["Owner", "Manager", "admin"],
   },
 
   {
     path: "/manage/add-package/:id",
     name: "AddPackage",
     element: AddPackage,
-    pageAcc: "add_package_page",
+    pageAcc: "packages_page",
     type: "private",
-    allowRole: ["Admin", "Manager", "admin"],
+    allowRole: ["Owner", "Manager", "admin"],
   },
   {
     path: "/manage/customer-orders",
@@ -345,7 +365,7 @@ const routes = [
     element: CustomerOrders,
     pageAcc: "customer_orders_page",
     type: "private",
-    allowRole: ["Admin", "Manager", "admin"],
+    allowRole: ["Owner", "Manager", "admin"],
   },
   {
     path: "/manage/order-summary",
@@ -353,7 +373,7 @@ const routes = [
     element: OrderSummary,
     pageAcc: "order_summary_page",
     type: "private",
-    allowRole: ["Admin", "Manager", "admin"],
+    allowRole: ["Owner", "Manager", "admin"],
   },
   {
     path: "/manage/order-manager",
@@ -361,7 +381,7 @@ const routes = [
     element: OrderManager,
     pageAcc: "order_manager_page",
     type: "private",
-    allowRole: ["Admin", "Manager", "admin"],
+    allowRole: ["Owner", "Manager", "admin"],
   },
   {
     path: "/manage/delivery",
@@ -369,15 +389,15 @@ const routes = [
     element: Delivery,
     pageAcc: "delivery_page",
     type: "private",
-    allowRole: ["Admin", "Manager", "admin", "Rider"],
+    allowRole: ["Owner", "Manager", "admin", "Rider"],
   },
   {
     path: "/manage/delivery-manager",
     name: "Delivery Manager",
     element: DeliveryManager,
-    pageAcc: "delivery_management_page",
+    pageAcc: "delivery_manager_page",
     type: "private",
-    allowRole: ["Admin", "Manager", "admin", "Rider"],
+    allowRole: ["Owner", "Manager", "admin", "Rider"],
   },
   // ----------No column found
   {
@@ -386,15 +406,15 @@ const routes = [
     element: QrReader,
     pageAcc: "customers_page",
     type: "private",
-    allowRole: ["Admin", "Manager", "admin", "Rider"],
+    allowRole: ["Owner", "Manager", "admin", "Rider"],
   },
   {
     path: "/manage/my-team",
     name: "My Team",
     element: MyTeam,
-    pageAcc: "team_page",
+    pageAcc: "my_team_page",
     type: "private",
-    allowRole: ["Admin", "Manager", "admin", "Rider"],
+    allowRole: ["Owner", "Manager", "admin", "Rider"],
   },
   {
     path: "/manage/all-subscription",
@@ -402,7 +422,7 @@ const routes = [
     element: AllSubscription,
     pageAcc: "all_subscriptions_page",
     type: "private",
-    allowRole: ["Admin", "Manager", "admin", "Rider"],
+    allowRole: ["Owner", "Manager", "admin", "Rider"],
   },
   {
     path: "/manage/team",
@@ -410,7 +430,15 @@ const routes = [
     element: TeamSettings,
     pageAcc: "team_settings_page",
     type: "private",
-    allowRole: ["Admin", "Manager", "admin"],
+    allowRole: ["Owner", "Manager", "admin"],
+  },
+  {
+    path: "/manage/add-team/",
+    name: "Team Settings",
+    element: TeamEmployee,
+    pageAcc: "team_settings_page",
+    type: "private",
+    allowRole: ["Owner", "Manager", "admin"],
   },
   {
     path: "/manage/team/:id",
@@ -418,7 +446,7 @@ const routes = [
     element: TeamEmployee,
     pageAcc: "team_settings_page",
     type: "private",
-    allowRole: ["Admin", "Manager", "admin"],
+    allowRole: ["Owner", "Manager", "admin"],
   },
   {
     path: "/manage/settings",
@@ -426,7 +454,7 @@ const routes = [
     element: Settings,
     pageAcc: "settings_page",
     type: "private",
-    allowRole: ["Admin", "Manager", "admin"],
+    allowRole: ["Owner", "Manager", "admin"],
   },
   {
     path: "/manage/locations",
@@ -434,7 +462,7 @@ const routes = [
     element: Location,
     pageAcc: "locations_page",
     type: "private",
-    allowRole: ["Admin", "Manager", "admin"],
+    allowRole: ["Owner", "Manager", "admin"],
   },
   {
     path: "/manage/promotions",
@@ -442,7 +470,7 @@ const routes = [
     element: CreatePromotions,
     pageAcc: "promotions_page",
     type: "private",
-    allowRole: ["Admin", "Manager", "admin"],
+    allowRole: ["Owner", "Manager", "admin"],
   },
 ];
 

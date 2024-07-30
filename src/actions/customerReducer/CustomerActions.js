@@ -15,6 +15,36 @@ export const getPackagesWithoutLoginByVendorId = (formData) => {
     }
   };
 };
+export const getAllCustomerOrders = (formData) => {
+  return async (dispatch) => {
+    try {
+      const { data } = await Customer.getAllCustomerOrders(formData);
+      return data;
+    } catch (error) {
+      console.log("failed to signin");
+    }
+  };
+};
+export const getCustomerDeliveryLocations = () => {
+  return async (dispatch) => {
+    try {
+      const { data } = await Customer.getCustomerDeliveryLocations();
+      return data;
+    } catch (error) {
+      console.log("failed to signin");
+    }
+  };
+};
+export const getVendorPackageByLocation = (formData) => {
+  return async (dispatch) => {
+    try {
+      const { data } = await Customer.getVendorPackageByLocation(formData);
+      return data;
+    } catch (error) {
+      console.log("failed to signin");
+    }
+  };
+};
 
 export const createUserFromOrderConformation = (formData) => {
   return async (dispatch) => {
@@ -477,6 +507,78 @@ export const validateEmployee = (formData) => {
   return async (dispatch) => {
     try {
       const { data } = await Customer.validateEmployee(formData);
+      return data;
+    } catch (error) {
+      console.log("failed to get customer");
+    }
+  };
+};
+export const getSelectedCustomerPackage = () => {
+  return async (dispatch) => {
+    try {
+      const { data } = await Customer.getSelectedCustomerPackage();
+      return data;
+    } catch (error) {
+      console.log("failed to get customer");
+    }
+  };
+};
+export const customerPackageCancelByCustomer = (formData) => {
+  return async (dispatch) => {
+    try {
+      const { data } = await Customer.customerPackageCancelByCustomer(formData);
+      return data;
+    } catch (error) {
+      console.log("failed to get customer");
+    }
+  };
+};
+export const getCustomerPaymentMethod = () => {
+  return async (dispatch) => {
+    try {
+      const { data } = await Customer.getCustomerPaymentMethod();
+      return data;
+    } catch (error) {
+      console.log("failed to get customer");
+    }
+  };
+};
+export const getCustomerDeliveryAddress = (id) => {
+  return async (dispatch) => {
+    try {
+      const { data } = await Customer.getCustomerDeliveryAddress(id);
+      return data;
+    } catch (error) {
+      console.log("failed to get customer");
+    }
+  };
+};
+export const updateCustomerPackageAddressByCustomer = (formData) => {
+  return async (dispatch) => {
+    try {
+      const { data } = await Customer.updateCustomerPackageAddressByCustomer(
+        formData
+      );
+      return data;
+    } catch (error) {
+      console.log("failed to get customer");
+    }
+  };
+};
+export const getCustomerBillingInfo = () => {
+  return async (dispatch) => {
+    try {
+      const { data } = await Customer.getCustomerBillingInfo();
+      return data;
+    } catch (error) {
+      console.log("failed to get customer");
+    }
+  };
+};
+export const updateCustomerPaymentMethod = (formData) => {
+  return async (dispatch) => {
+    try {
+      const { data } = await Customer.updateCustomerPaymentMethod(formData);
       return data;
     } catch (error) {
       console.log("failed to get customer");

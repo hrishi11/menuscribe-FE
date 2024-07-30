@@ -80,7 +80,7 @@ const Login = () => {
       if (response && response.status === "success") {
         localStorage.setItem("VendorEmployeeId", formData.vendorEmployeeId);
         Toast({ message: "Login successfull", type: "success" });
-        if (response.type === "Admin") {
+        if (response.type === "Owner") {
           navigate("/manage/dashboard");
         } else if (response.type === "Rider") {
           navigate("/manage/delivery");

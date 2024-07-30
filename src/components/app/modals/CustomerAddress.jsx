@@ -34,6 +34,7 @@ import {
   Button,
   useDisclosure,
 } from "@nextui-org/react";
+// import PlaceAutocomplete from "../../PlaceAutocomplete/PlaceAutocomplete";
 
 const libraries = ["places"];
 
@@ -145,6 +146,13 @@ const CustomerAddress = ({
     }
   };
 
+  const handleBlur = async () => {
+    try {
+      await google.maps.event.clearInstanceListeners(autocomplete);
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
   return (
     <CRow>
       <div className="z-0">
@@ -163,6 +171,14 @@ const CustomerAddress = ({
             onSubmit={handleCustomerAddress}
           >
             <CModalBody>
+              {/* <CRow>
+                <CCol>
+                  <CFormLabel className="font-12">cgec</CFormLabel>
+
+                  <PlaceAutocomplete />
+                </CCol>
+              </CRow> */}
+
               <CRow>
                 <CCol>
                   <CFormLabel className="font-12">Address</CFormLabel>
@@ -180,12 +196,16 @@ const CustomerAddress = ({
                         autocomplete?.getPlace() &&
                           handlePlaceSelect(autocomplete.getPlace());
                       }}
+                      options={{
+                        componentRestrictions: { country: "ca" },
+                      }}
                     >
                       <CFormInput
                         // className="simple-input"
                         type="text"
                         name="address"
                         placeholder="Enter your address"
+                        onBlur={handleBlur}
                         required
                         onChange={handleFormData}
                         value={formData.address || ""}

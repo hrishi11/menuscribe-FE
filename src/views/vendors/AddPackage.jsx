@@ -99,7 +99,7 @@ const AddPackage = () => {
   const [getCustomers, setGetCustomers] = useState([]);
 
   useEffect(() => {
-    handleUserRole(["Admin"]);
+    handleUserRole(["Owner"]);
 
     fetchTimeSlots();
   }, []);

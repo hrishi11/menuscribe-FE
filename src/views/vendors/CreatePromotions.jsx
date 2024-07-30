@@ -48,7 +48,7 @@ export default function CreatePromotions() {
   const [deletePopup, setDeletePopup] = useState({ show: false, location: {} });
 
   useEffect(() => {
-    handleUserRole("Admin");
+    handleUserRole("Owner");
   }, []);
 
   const fetchVendor = async () => {

@@ -36,6 +36,7 @@ const _nav = {
       component: CNavItem,
       name: "Delivery Manage",
       to: "/delivery-manage",
+
       icon: <CIcon icon={cilTruck} customClassName="nav-icon" />,
       badge: {
         color: "info",
@@ -66,6 +67,7 @@ const _nav = {
       component: CNavItem,
       name: "Get started",
       to: "/manage/get-started",
+      // pageAcc: "get_started_page",
       icon: <CIcon icon={cilFastfood} customClassName="nav-icon" />,
       badge: {
         color: "info",
@@ -82,12 +84,12 @@ const _nav = {
       },
     },
   ],
-  Admin: [
+  Owner: [
     {
       component: CNavItem,
       name: "Dashboard",
       to: "/manage/dashboard",
-      pageAcc: "homepage",
+      pageAcc: "dashboard_page",
       icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
       badge: {
         color: "info",
@@ -98,7 +100,7 @@ const _nav = {
       component: CNavItem,
       name: "Get started",
       to: "/manage/get-started",
-      pageAcc: "homepage",
+      pageAcc: "get_started_page",
       icon: <CIcon icon={cilFastfood} customClassName="nav-icon" />,
       badge: {
         color: "info",
@@ -140,7 +142,7 @@ const _nav = {
       component: CNavItem,
       name: "Upload Users",
       to: "/manage/upload-users",
-      pageAcc: "package_requests_page",
+      pageAcc: "upload_users_page",
       icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
       badge: {
         color: "info",
@@ -161,7 +163,7 @@ const _nav = {
       component: CNavItem,
       name: "Create Menu",
       to: "/manage/create-menu",
-      pageAcc: "menu_page",
+      pageAcc: "create_menu_page",
       icon: <CIcon icon={cilFastfood} customClassName="nav-icon" />,
       badge: {
         color: "info",
@@ -171,7 +173,7 @@ const _nav = {
       component: CNavItem,
       name: "Multiple Menu Editor",
       to: "/manage/multi-menu-editor",
-      pageAcc: "menu_page",
+      pageAcc: "multiple_menu_editor_page",
       icon: <CIcon icon={cilFastfood} customClassName="nav-icon" />,
       badge: {
         color: "info",
@@ -193,7 +195,7 @@ const _nav = {
       component: CNavItem,
       name: "Website Setting",
       to: "/manage/website-settings",
-      pageAcc: "package_requests_page",
+      pageAcc: "website_setting_page",
       icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
       badge: {
         color: "info",
@@ -203,7 +205,7 @@ const _nav = {
       component: CNavItem,
       name: "Payments",
       to: "/manage/payments",
-      pageAcc: "order_summary_page",
+      pageAcc: "payments_page",
       icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
       badge: {
         color: "info",
@@ -213,7 +215,7 @@ const _nav = {
       component: CNavItem,
       name: "Billing",
       to: "/manage/billing",
-      pageAcc: "order_summary_page",
+      pageAcc: "billing_page",
       icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
       badge: {
         color: "info",
@@ -243,7 +245,17 @@ const _nav = {
       component: CNavItem,
       name: "Delivery Manager",
       to: "/manage/delivery-manager",
-      pageAcc: "delivery_management_page",
+      pageAcc: "delivery_manager_page",
+      icon: <CIcon icon={cilTruck} customClassName="nav-icon" />,
+      badge: {
+        color: "info",
+      },
+    },
+    {
+      component: CNavItem,
+      name: "Ad Designer",
+      to: "/manage/ad-designer",
+      pageAcc: "ad_desginer_page",
       icon: <CIcon icon={cilTruck} customClassName="nav-icon" />,
       badge: {
         color: "info",
@@ -263,7 +275,7 @@ const _nav = {
       component: CNavItem,
       name: "My Team",
       to: "/manage/my-team",
-      pageAcc: "team_page",
+      pageAcc: "my_team_page",
       icon: <CIcon icon={cilFastfood} customClassName="nav-icon" />,
       badge: {
         color: "info",

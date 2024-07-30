@@ -20,7 +20,13 @@ export const getUserPackages = async (data) =>
   API.post(`get-user-packages`, data);
 
 export const getPackagesWithoutLoginByVendorId = async (data) =>
-  API.get(`/get-packages-without-login-by-vendorid/${data.vendor_id}`);
+  API.post(`/get-packages-without-login-by-vendorid`, data);
+export const getAllCustomerOrders = async (data) =>
+  API.post(`/get-all-customer-orders`, data);
+export const getCustomerDeliveryLocations = async () =>
+  API.get(`/get-customer-delivery-locations`);
+export const getVendorPackageByLocation = async (data) =>
+  API.post(`/get-vendor-package-by-location`, data);
 
 export const getResturantDetails = async (data) =>
   API.post(`get-resturant-details`, data);
@@ -113,6 +119,20 @@ export const getCustomerCustomerPackageRequest = async () =>
 // ---------------------Team Settings------------
 export const validateEmployee = async (data) =>
   API.post(`validate-employee`, data);
+export const getSelectedCustomerPackage = async () =>
+  API.get(`get-selected-customer-package`);
+export const customerPackageCancelByCustomer = async (data) =>
+  API.post(`customer-package-cancel-by-customer`, data);
+export const getCustomerPaymentMethod = async () =>
+  API.get(`get-customer-payment-method`);
+export const getCustomerDeliveryAddress = async (id) =>
+  API.get(`get-customer-delivery-address/${id}`);
+export const updateCustomerPackageAddressByCustomer = async (data) =>
+  API.post(`update-customer-package-address-by-customer`, data);
+export const getCustomerBillingInfo = async () =>
+  API.get(`get-customer-billing-info`);
+export const updateCustomerPaymentMethod = async (data) =>
+  API.patch(`update-customer-payment-method`, data);
 export const getEmployees = async () => API.get(`get-employees`);
 export const getVendorLocations = async () => API.get(`get-vendor-locations`);
 export const setEmployee = async (data) => API.patch(`set-employee`, data);

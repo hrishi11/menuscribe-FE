@@ -6,10 +6,11 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  Pagination,
+  //   Pagination,
 } from "@nextui-org/react";
 import { MdVerified } from "react-icons/md";
 import { GoUnverified } from "react-icons/go";
+import { Pagination } from "antd";
 
 export default function BillingTable({
   billingInfo,
@@ -17,8 +18,6 @@ export default function BillingTable({
   page,
   setPage,
 }) {
-  console.log("customerP", customerSubscriptions);
-
   function formatDate(dateString) {
     const months = [
       "Jan",
@@ -35,12 +34,11 @@ export default function BillingTable({
       "Dec",
     ];
 
-    const date = new Date(dateString);
-    const day = date.getDate();
-    const month = months[date.getMonth()];
-    const year = date.getFullYear();
+    // Split the date string into components
+    const [year, month, day] = dateString.split("-");
 
-    return `${day} ${month} ${year}`;
+    // Construct the formatted date
+    return `${day} ${months[parseInt(month) - 1]} ${year}`;
   }
   return (
     <Table
@@ -48,6 +46,17 @@ export default function BillingTable({
       bottomContent={
         <div className="flex w-full justify-center">
           <Pagination
+            defaultCurrent={1}
+            total={totalPages * 10}
+            pageSize={10}
+            showSizeChanger={false}
+            // pageSizeOptions={[10, 20, 30, 50, 100]}
+            onChange={(page, size) => {
+              setPage(page);
+              //   setPageSize(size);
+            }}
+          />
+          {/* <Pagination
             isCompact
             showControls
             showShadow
@@ -55,7 +64,7 @@ export default function BillingTable({
             page={page}
             total={totalPages}
             onChange={(page) => setPage(page)}
-          />
+          /> */}
         </div>
       }
       classNames={{
@@ -63,70 +72,34 @@ export default function BillingTable({
       }}
     >
       <TableHeader>
-        <TableColumn>NAME</TableColumn>
-        <TableColumn>LAST ORDER</TableColumn>
-        <TableColumn className="flex flex-col text-center">
-          <span className="">PACKAGE</span>
-          <span>Customer Package ID - Subscription ID</span>
-        </TableColumn>
-        <TableColumn>Payment Status</TableColumn>
+        <TableColumn>PAYMENT DATE</TableColumn>
+        <TableColumn>PAYMENT DUE</TableColumn>
+        <TableColumn className="">PLAN</TableColumn>
+        <TableColumn>PAYMENT STATUS</TableColumn>
       </TableHeader>
       <TableBody>
-        {customerSubscriptions.map((item) => (
+        {billingInfo.map((item) => (
           <TableRow key="1">
             <TableCell>
-              {item.CustomerPackage.UserCustomer ? (
-                <>
-                  {item.CustomerPackage.UserCustomer?.first_name}{" "}
-                  {item.CustomerPackage.UserCustomer?.last_name}
-                </>
-              ) : (
-                "N/A"
-              )}
+              {formatDate(item?.payment_date.split("T")[0])}
             </TableCell>
-            <TableCell>
-              {item.CustomerPackage.CustomerOrders.length > 0
-                ? formatDate(
-                    item.CustomerPackage.CustomerOrders.sort(
-                      (a, b) => new Date(a.order_date) - new Date(b.order_date)
-                    )[0].order_date
-                  )
-                : "N/A"}
-            </TableCell>
-            <TableCell className="flex flex-col text-center">
-              <span>
-                {item.CustomerPackage.VendorPackagePrice ? (
-                  <>
-                    {" "}
-                    {item.CustomerPackage.VendorPackagePrice?.frequency}-
-                    {item.CustomerPackage.VendorPackagePrice?.method}
-                  </>
-                ) : (
-                  "N/A"
-                )}
-              </span>
-              <span>
-                {item.CustomerPackage?.id}- {item.id}
-              </span>
-            </TableCell>
+            <TableCell>{formatDate(item?.payment_due)} </TableCell>
+            <TableCell>{item.Plan?.package_name}</TableCell>
             <TableCell>
               {item.status == 1 ? (
-                <span className="flex flex-col items-center ">
+                <span className="">
                   {" "}
                   <span className="flex gap-2 items-center  font-semibold">
-                    <MdVerified className="text-blue-400 text-[20px]" /> Paid -{" "}
-                    {item.PaymentMethod.method_name}
+                    <MdVerified className="text-blue-400 text-[20px]" /> Paid
                   </span>
-                  {formatDate(item.payment_date.split("T")[0])}
                 </span>
               ) : (
-                <span className="flex flex-col gap-2 items-center">
+                <span className="">
                   {" "}
                   <span className="flex gap-2 items-center font-semibold">
                     <GoUnverified className="text-yellow-600 text-[20px]" />{" "}
-                    Unpaid - {item.PaymentMethod?.method_name}
+                    Unpaid
                   </span>
-                  {formatDate(item.payment_date.split("T")[0])}
                 </span>
               )}
             </TableCell>

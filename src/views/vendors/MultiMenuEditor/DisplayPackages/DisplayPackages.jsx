@@ -38,7 +38,7 @@ function checkAndDisplayDays(data) {
 export const DisplayPackages = ({ scrollRef, allItems }) => {
   const [pack, setPack] = useState();
   useEffect(() => {
-    console.log(allItems);
+    // console.log("allItems", allItems);
     setPack(checkAndDisplayDays(allItems));
   }, []);
   return (
@@ -60,9 +60,13 @@ export const DisplayPackages = ({ scrollRef, allItems }) => {
                       {item.defaultItem.map((dItem) => (
                         <div className="flex flex-col items-center ">
                           <span className="font-semibold">
-                            {dItem.item_name
-                              ? dItem.item_name
-                              : "For All Packages"}
+                            {dItem.item_name ? (
+                              <>
+                                {dItem.item_name} - {dItem.quantity}
+                              </>
+                            ) : (
+                              "For All Packages"
+                            )}
                             :
                           </span>
                           {dItem.itemRelated.map((relatedItem) => (

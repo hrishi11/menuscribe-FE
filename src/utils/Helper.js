@@ -269,7 +269,7 @@ export const scrollToTop = () => {
   });
 };
 export const handleUserRole = (role) => {
-  const newRole = ["Admin", "Manager", "Rider"];
+  const newRole = ["Owner", "Manager", "Rider"];
   const storedAuthData = JSON.parse(localStorage.getItem("menuScribe"));
   if (newRole.includes(storedAuthData.type)) {
     return true;
@@ -282,4 +282,19 @@ export const handleUserRole = (role) => {
       window.location.href = "/";
     }
   }
+};
+
+export const globalSearch = (array, keyword) => {
+  const lowerKeyword = keyword.toLowerCase();
+
+  const searchObject = (obj) => {
+    return Object.values(obj).some((value) => {
+      if (typeof value === "object" && value !== null) {
+        return searchObject(value);
+      }
+      return String(value).toLowerCase().includes(lowerKeyword);
+    });
+  };
+
+  return array.filter((item) => searchObject(item));
 };

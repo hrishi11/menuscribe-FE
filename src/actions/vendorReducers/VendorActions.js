@@ -415,6 +415,107 @@ export const getVendorEmployee = (formData) => {
     }
   };
 };
+export const getVendorSettingsById = (formData) => {
+  return async (dispatch) => {
+    try {
+      const { data } = await Vendor.getVendorSettingsById(formData);
+      return data;
+    } catch (error) {
+      console.log("failed to signin");
+    }
+  };
+};
+export const getVendorSettingsByVendorId = (formData) => {
+  return async (dispatch) => {
+    try {
+      const { data } = await Vendor.getVendorSettingsByVendorId(formData);
+      return data;
+    } catch (error) {
+      console.log("failed to signin");
+    }
+  };
+};
+export const getAllVendorPackages = () => {
+  return async (dispatch) => {
+    try {
+      const { data } = await Vendor.getAllVendorPackages();
+      return data;
+    } catch (error) {
+      console.log("failed to signin");
+    }
+  };
+};
+export const setVendorSettings = (formData) => {
+  return async (dispatch) => {
+    try {
+      const { data } = await Vendor.setVendorSettings(formData);
+      return data;
+    } catch (error) {
+      console.log("failed to signin");
+    }
+  };
+};
+export const getVendorSettings = () => {
+  return async (dispatch) => {
+    try {
+      const { data } = await Vendor.getVendorSettings();
+      return data;
+    } catch (error) {
+      console.log("failed to signin");
+    }
+  };
+};
+export const getAllUserVendors = () => {
+  return async (dispatch) => {
+    try {
+      const { data } = await Vendor.getAllUserVendors();
+      return data;
+    } catch (error) {
+      console.log("failed to signin");
+    }
+  };
+};
+export const createVendorSettings = (formData) => {
+  return async (dispatch) => {
+    try {
+      const { data } = await Vendor.createVendorSettings(formData);
+      return data;
+    } catch (error) {
+      console.log("failed to signin");
+    }
+  };
+};
+export const createVendorTamplateDesigner = (formData) => {
+  return async (dispatch) => {
+    try {
+      const { data } = await Vendor.createVendorTamplateDesigner(formData);
+      return data;
+    } catch (error) {
+      console.log("failed to signin");
+    }
+  };
+};
+export const getVendorTamplateDesigner = () => {
+  return async (dispatch) => {
+    try {
+      const { data } = await Vendor.getVendorTamplateDesigner();
+      return data;
+    } catch (error) {
+      console.log("failed to signin");
+    }
+  };
+};
+export const getVendorTamplateInfo = () => {
+  return async (dispatch) => {
+    try {
+      const { data } = await Vendor.getVendorTamplateInfo();
+      return data;
+    } catch (error) {
+      console.log("failed to signin");
+    }
+  };
+};
+
 export const getItem = (id) => {
   return async (dispatch) => {
     try {
@@ -548,6 +649,17 @@ export const setVendorStoreInfo = (form) => {
   return async (dispatch) => {
     try {
       const { data } = await Vendor.setVendorStoreInfo(form);
+      return data;
+    } catch (error) {
+      console.log("failed to signin2");
+      return error;
+    }
+  };
+};
+export const getVendorRoles = () => {
+  return async (dispatch) => {
+    try {
+      const { data } = await Vendor.getVendorRoles();
       return data;
     } catch (error) {
       console.log("failed to signin2");
@@ -758,6 +870,26 @@ export const addDefaultItemToDay = (formData) => {
   return async (dispatch) => {
     try {
       const { data } = await Vendor.addDefaultItemToDay(formData);
+      return data;
+    } catch (error) {
+      console.log("failed to signin");
+    }
+  };
+};
+export const changeCustomerPackage = (formData) => {
+  return async (dispatch) => {
+    try {
+      const { data } = await Vendor.changeCustomerPackage(formData);
+      return data;
+    } catch (error) {
+      console.log("failed to signin");
+    }
+  };
+};
+export const deleteVendorMenuItem = (formData) => {
+  return async (dispatch) => {
+    try {
+      const { data } = await Vendor.deleteVendorMenuItem(formData);
       return data;
     } catch (error) {
       console.log("failed to signin");
@@ -1366,6 +1498,18 @@ export const getCustomerPaymentStatus = (formData) => {
   return async (dispatch) => {
     try {
       const response = await Vendor.getCustomerPaymentStatus(formData);
+
+      return response;
+    } catch (error) {
+      console.log("Error", error);
+    }
+  };
+};
+
+export const getVendorBillingInfo = (formData) => {
+  return async (dispatch) => {
+    try {
+      const response = await Vendor.getVendorBillingInfo(formData);
 
       return response;
     } catch (error) {

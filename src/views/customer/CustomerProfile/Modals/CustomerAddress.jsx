@@ -165,7 +165,9 @@ const CustomerAddress = ({
             <CModalBody>
               <CRow>
                 <CCol>
-                  <CFormLabel className="font-12">Address</CFormLabel>
+                  <CFormLabel className="text-red-600 font-12">
+                    Address
+                  </CFormLabel>
                   <LoadScript
                     googleMapsApiKey={GOOGLE_MAPS_API_KEY}
                     libraries={libraries}
@@ -175,6 +177,9 @@ const CustomerAddress = ({
                     <Autocomplete
                       onLoad={(autocomplete) => {
                         setAutocomplete(autocomplete);
+                      }}
+                      options={{
+                        componentRestrictions: { country: "ca" },
                       }}
                       onPlaceChanged={() => {
                         autocomplete?.getPlace() &&

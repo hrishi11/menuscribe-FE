@@ -10,7 +10,7 @@ import { ToastContainer } from "react-toastify";
 const DefaultLayout = () => {
   const navigate = useNavigate();
   const vendorData = JSON.parse(localStorage.getItem("menuScribe"));
-  const VendorRouters = ["Admin", "Manager", "Rider"];
+  const VendorRouters = ["Owner", "Manager", "Rider"];
   console.log(vendorData.type, VendorRouters.includes(vendorData.type));
   if (!VendorRouters.includes(vendorData.type)) {
     navigate("/");

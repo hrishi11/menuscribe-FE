@@ -217,7 +217,9 @@ const PacakgeNameDetail = ({
               />
             </div>
           </div>
-          <div className="d-flex w-72 flex-col">
+
+          {/* Image Upload */}
+          <div className="d-flex w-fit flex-col">
             <div className="me-2">
               <CFormLabel className="font-12">Package Image</CFormLabel>
             </div>
@@ -236,12 +238,12 @@ const PacakgeNameDetail = ({
               />
               <label
                 for="file-input"
-                class="cursor-pointer bg-gray-100 text-black px-6 py-2 rounded-md shadow-md border-dashed border-2 border-gray-400"
+                class="cursor-pointer bg-gray-100 w-fit text-black px-12 py-2 rounded-md shadow-md border-dashed border-2 border-gray-400"
               >
                 Select Image
               </label>
-              <div className="text-gray-700">
-                {formData.file ? formData.file?.name : formData.image}
+              <div className="text-gray-700 w-[200px]">
+                {formData.file ? formData.file?.name : "Select Image here"}
               </div>
             </div>
           </div>
@@ -249,7 +251,7 @@ const PacakgeNameDetail = ({
             <div className="flex flex-col gap-1">
               <img
                 src={formData.image}
-                className="rounded-lg w-[100px] h-20"
+                className="rounded-lg min-w-[100px] h-20"
                 alt=""
               />
               <span

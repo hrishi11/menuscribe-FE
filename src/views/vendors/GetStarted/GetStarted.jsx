@@ -200,7 +200,7 @@ export default function GetStarted() {
               {count.paymentMethod &&
                 (count.paymentMethod > 0 ? (
                   <p className="text-green-600 font-semibold">
-                    COMPLETED - You have {count.paymentMethod} payment method
+                    COMPLETED - You have {count.paymentMethod} payment methods
                   </p>
                 ) : (
                   <p className="text-red-600 font-semibold">

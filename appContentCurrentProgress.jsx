@@ -16,7 +16,7 @@ const AppContent = () => {
   //   return;
   // }
   //const isAuthenticated = authData.length || storedAuthData && storedAuthData.token;
-  const routing = useRoutes(routes.filter((route) =>{ 
+  const routing = useRoutes(routes.filter((route) =>{
     console.log(route, 'route')
     return route.allowRole?.includes(storedAuthData.type)}));
 
@@ -27,7 +27,7 @@ const AppContent = () => {
           {/* {routes.map((route, idx) => {
             return (
               route.element && (
-            
+
                 <Route
                   key={idx}
                   path={route.path}
@@ -39,7 +39,7 @@ const AppContent = () => {
                     exact={route.exact}
                     name={route.name}
                     component={route.element}
-                  
+
                     allowedRoles={route?.allowRole}
                     userRole={storedAuthData.type}
                   />}
@@ -206,7 +206,7 @@ const ProtectedRoute = ({ element }) => {
   const handleRoute = (auth) => {
     console.log(element, auth, "Auth")
     if(auth.type=== 'admin') {
-    
+
     }
     return true;
   }
@@ -223,7 +223,6 @@ export default ProtectedRoute;
 import { Route, Navigate } from 'react-router-dom';
 import PackageRequest from './src/views/vendors/PackageRequest'
 
-
 const PrivateRoute = ({ component: Component, allowedRoles, userRole, ...rest }) => <Route
     {...rest}
     render={(props) =>
@@ -234,6 +233,5 @@ const PrivateRoute = ({ component: Component, allowedRoles, userRole, ...rest })
       )
     }
   />
-
 
 export default PrivateRoute;

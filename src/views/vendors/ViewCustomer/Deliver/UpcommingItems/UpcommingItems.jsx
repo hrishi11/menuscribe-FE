@@ -88,9 +88,9 @@ const UpcommingItems = ({ itemKey, item, fetchOrders }) => {
           </CButton> */}
         </div>
         <CAccordionBody>
-          <p className="m-0  font-semibold">{VendorPackage.package_name}:</p>
+          <p className="m-0  font-semibold">{VendorPackage?.package_name}:</p>
           <ul className="itemsContainer">
-            {VendorPackage.DefaultItemsWithExistingOrders.map((item) => {
+            {VendorPackage?.DefaultItemsWithExistingOrders?.map((item) => {
               if (item.CustomerOrderItem) {
                 return (
                   <li key={item.id}>

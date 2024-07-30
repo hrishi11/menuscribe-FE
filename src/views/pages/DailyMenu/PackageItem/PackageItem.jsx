@@ -26,7 +26,8 @@ const PackageItem = ({ day, selectedPackage }) => {
         <div className="">
           {/* Set the header for the list */}
           <span className="font-medium">
-            {VendorPackageDefaultItem.item_name}
+            {VendorPackageDefaultItem.item_name}-
+            {VendorPackageDefaultItem.quantity}
           </span>{" "}
           {/* Assuming VendorPackageDefaultItem has a name property */}
           {/* Render the list of menu items */}
@@ -34,7 +35,7 @@ const PackageItem = ({ day, selectedPackage }) => {
           {SelectedMenuItems.map((itm, i) => (
             <div className="" key={i}>
               -
-              {`${itm.menu_item_name}${
+              {`${itm.menu_item_name} ${
                 SelectedMenuItems.length - 1 !== i ? " / " : ""
               }`}
             </div>
@@ -45,7 +46,8 @@ const PackageItem = ({ day, selectedPackage }) => {
     } else {
       return (
         <ul className="font-medium" key={VendorPackageDefaultItem.id}>
-          {VendorPackageDefaultItem.item_name}
+          {VendorPackageDefaultItem.item_name} -
+          {VendorPackageDefaultItem.quantity}
         </ul>
       );
     }

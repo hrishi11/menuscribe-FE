@@ -25,7 +25,7 @@ const TeamSettings = () => {
   };
   const validateOWNER = async () => {
     try {
-      const res = await dispatch(validateEmployee({ role: "OWNER" }));
+      const res = await dispatch(validateEmployee({ role: "Owner" }));
       setAccess(res.access);
     } catch (error) {
       console.log(error);
@@ -38,7 +38,7 @@ const TeamSettings = () => {
   }, []);
 
   if (!access) {
-    return <h2>Sorry. This page is only for owners only</h2>;
+    return <h2>Sorry. Access to this page is not permitted.</h2>;
   }
 
   return (

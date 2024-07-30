@@ -7,14 +7,7 @@ import { useDispatch } from "react-redux";
 import { setOrder } from "../../../../actions/customerReducer/CustomerActions";
 import { Toast } from "../../../../components/app/Toast";
 
-const SelectPopup = ({
-  packge,
-  popup,
-  setPopup,
-  // handleDeliveryCheck,
-  // handlePickupCheck,
-  // handleTimeSlotChange,
-}) => {
+const SelectPopup = ({ packge, popup, setPopup }) => {
   const [pack, setpack] = useState(packge);
   const [orderItems, setOrderItems] = useState([]);
   const packId = popup.packageId;

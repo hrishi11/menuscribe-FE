@@ -92,7 +92,7 @@ const DashboardCustomer = () => {
       encodeURIComponent(address);
     window.open(googleMapsUrl, "_blank");
   };
-  console.log(customerPackages);
+
   const fetchData = async () => {
     try {
       const [userResponse] = await Promise.all([

@@ -681,7 +681,7 @@ export default function CustomerSignup() {
                 </div>
               </div>
               <span className="">
-                Don't receive the code?{" "}
+                Didn't receive the code?{" "}
                 {canResend ? (
                   <span
                     onClick={resendOtp}
@@ -848,6 +848,9 @@ export default function CustomerSignup() {
                       className="w-[450px]"
                       onLoad={(autocomplete) => {
                         setAutocomplete(autocomplete);
+                      }}
+                      options={{
+                        componentRestrictions: { country: "ca" },
                       }}
                       onPlaceChanged={() => {
                         autocomplete?.getPlace() &&

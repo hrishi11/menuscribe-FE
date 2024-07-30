@@ -5,7 +5,10 @@ import { CContainer, CSpinner } from "@coreui/react";
 // routes config
 import routes from "../routes";
 import { useDispatch } from "react-redux";
-import { getVendorEmployee } from "../actions/vendorReducers/VendorActions";
+import {
+  getVendorEmployee,
+  getVendorSettingsById,
+} from "../actions/vendorReducers/VendorActions";
 import Page404 from "../views/pages/page404/Page404";
 
 const AppContent = () => {
@@ -14,14 +17,43 @@ const AppContent = () => {
   const fetchVendorEmployee = async () => {
     try {
       const VendorEmployeeId = localStorage.getItem("VendorEmployeeId");
-      const res = await dispatch(getVendorEmployee({ VendorEmployeeId }));
-      if (res.data) {
-        const FinalRoutes = [];
-        // console.log(res.data["add_customer_page"]);
-        routes.forEach(
-          (item) => res.data[item.pageAcc] === 1 && FinalRoutes.push(item)
-        );
-        setFinalRoutes(FinalRoutes);
+      const Vendor = JSON.parse(localStorage.getItem("menuScribe"));
+
+      if (Vendor.type === "Owner") {
+        const res = await dispatch(getVendorSettingsById(Vendor.id));
+
+        if (res.data) {
+          const FinalRoutes = [];
+
+          // res.vendor.website_admin == 1 && FinalRoutes.push("website_admin");
+          routes.forEach((item) =>
+            res.data[item.pageAcc] === 1
+              ? FinalRoutes.push(item)
+              : res.vendor.website_admin == 1 &&
+                item.pageAcc == "website_admin" &&
+                FinalRoutes.push(item)
+          );
+
+          setFinalRoutes(FinalRoutes);
+        }
+      } else {
+        const res = await dispatch(getVendorEmployee({ VendorEmployeeId }));
+        if (res.data) {
+          const FinalRoutes = [];
+          console.log('res.data["add_customer_page"]', VendorEmployeeId);
+
+          // res.vendor.website_admin == 1 && FinalRoutes.push("website_admin");
+
+          routes.forEach((item) =>
+            res.data[item.pageAcc] === 1
+              ? FinalRoutes.push(item)
+              : res.vendor.website_admin == 1 &&
+                item.pageAcc == "website_admin" &&
+                FinalRoutes.push(item)
+          );
+
+          setFinalRoutes(FinalRoutes);
+        }
       }
     } catch (error) {
       console.log(error);

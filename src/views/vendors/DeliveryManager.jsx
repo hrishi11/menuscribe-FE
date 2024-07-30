@@ -1,14 +1,28 @@
 import React, { useEffect, useState } from "react";
+
 import { FaTruck } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import {
   addDriver,
   getVendorCities,
   getVendorDrivers,
+  getVendorSettings,
 } from "../../actions/vendorReducers/VendorActions";
-import { Button, Modal } from "antd";
-import { Input } from "@nextui-org/react";
+import { Button, Modal, Select } from "antd";
+import { Input, useDisclosure } from "@nextui-org/react";
 import { CFormLabel, CFormSelect } from "@coreui/react";
+import LimitModal from "../../components/Modals/LimitModal";
+import PhoneInput from "react-phone-input-2";
+
+import Checkbox from "@mui/material/Checkbox";
+import TextField from "@mui/material/TextField";
+import Autocomplete from "@mui/material/Autocomplete";
+import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
+import { Toast } from "../../components/app/Toast";
+
+const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
+const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 export default function DeliveryManager() {
   const [info, setInfo] = useState([]);
@@ -24,9 +38,10 @@ export default function DeliveryManager() {
   const [email, setEmail] = useState("");
   const [phoneNo, setPhoneNo] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
-
+  const [options, setOptions] = useState([]);
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [limit, setLimit] = useState();
   const handleAddCountry = () => {
-    console.log(selectedKeys);
     const find = selectedKeys.map((name) => {
       const item = cities.find(
         (val) => val.VendorLocation.CitiesAll.city === name
@@ -40,7 +55,7 @@ export default function DeliveryManager() {
   const getVendorDriver = async () => {
     try {
       const res = await dispatch(getVendorDrivers());
-      setInfo(res.data);
+      setInfo(res.data.VendorEmployees);
     } catch (error) {
       console.log("error", error);
     }
@@ -51,7 +66,14 @@ export default function DeliveryManager() {
     const fetchData = async () => {
       try {
         const response = await dispatch(getVendorCities());
-
+        const opt = response.data.map((city) => ({
+          id: city.id,
+          // label: `${city.VendorLocation?.CitiesAll?.city}-${city.VendorLocation?.PostalRegion?.POSTAL_CODE}`,
+          // value: `${city.VendorLocation.CitiesAll.city}-${city.VendorLocation?.PostalRegion?.POSTAL_CODE}`,
+          label: `${city.VendorLocation?.location_name}`,
+          value: `${city.VendorLocation.location_name}`,
+        }));
+        setOptions(opt);
         setCities(response.data);
       } catch (error) {
         console.error("Error fetching packages:", error);
@@ -59,8 +81,18 @@ export default function DeliveryManager() {
     };
     fetchData();
   }, []);
-  const showModal = () => {
-    setOpen(true);
+  const showModal = async () => {
+    const checkLimit = await dispatch(getVendorSettings());
+
+    if (
+      (checkLimit.data.no_of_drivers || checkLimit.data.no_of_drivers == 0) &&
+      info.length >= checkLimit.data.no_of_drivers
+    ) {
+      setLimit(checkLimit.data.no_of_drivers);
+      onOpen();
+    } else {
+      setOpen(true);
+    }
   };
 
   const handleOk = async () => {
@@ -74,14 +106,18 @@ export default function DeliveryManager() {
           cities: selectedCities,
         })
       );
+      if (response.success) {
+        getVendorDriver();
 
-      setEmail("");
-      setFirstName("");
-      setLastName("");
-      setPhoneNo("");
-      setSelectedKeys([]);
-      setSelectedCities([]);
-      setOpen(false);
+        setEmail("");
+        setFirstName("");
+        setLastName("");
+        setPhoneNo("");
+        setSelectedKeys([]);
+        setSelectedCities([]);
+        Toast({ message: response.message, type: "success" });
+        setOpen(false);
+      }
     } else {
       setErrorMsg("Field Cannot Be Null");
     }
@@ -96,6 +132,9 @@ export default function DeliveryManager() {
     setOpen(false);
   };
 
+  useEffect(() => {
+    console.log("selectedCities", selectedCities);
+  }, [selectedCities]);
   const handleRemoveCity = (id) => {
     console.log("id", id);
     const result = selectedKeys.filter((item) => item !== `${id}`);
@@ -110,6 +149,13 @@ export default function DeliveryManager() {
   };
   return (
     <div>
+      <LimitModal
+        name={"packages"}
+        limit={limit}
+        isOpen={isOpen}
+        onOpen={onOpen}
+        onOpenChange={onOpenChange}
+      />
       <h2>Requests</h2>
       <div className="p-2">
         <div className=" d-flex justify-content-end " style={{ width: "100%" }}>
@@ -127,7 +173,7 @@ export default function DeliveryManager() {
             open={open}
             onOk={handleOk}
             confirmLoading={confirmLoading}
-            width={"40%"}
+            width={"60%"}
             onCancel={handleCancel}
           >
             {errorMsg && <p className="text-danger fs-3">{errorMsg}</p>}
@@ -137,26 +183,20 @@ export default function DeliveryManager() {
                 style={{ width: "100%" }}
               >
                 <span className="w-full flex flex-col">
-                  <label htmlFor="" className="fs-6">
-                    First Name
-                  </label>
-                  <input
+                  <TextField
                     type="text"
-                    className="fs-5"
-                    //
+                    label="First Name"
+                    className="rounded-md fs-5 w-full"
                     placeholder="First Name"
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
                   />
                 </span>
                 <span className="w-full flex flex-col">
-                  <label htmlFor="" className="fs-6">
-                    Last Name
-                  </label>
-                  <input
+                  <TextField
                     type="text"
-                    className=" fs-5 w-full"
-                    //
+                    label="Last Name"
+                    className="rounded-md fs-5 w-full"
                     placeholder="Last Name"
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
@@ -168,114 +208,186 @@ export default function DeliveryManager() {
                 style={{ width: "100%" }}
               >
                 <span className="w-full  flex flex-col">
-                  <label htmlFor="" className="fs-6 ">
-                    Email
-                  </label>
-                  <input
+                  <TextField
                     type="email"
-                    className=" fs-5 w-full"
+                    label="Email"
+                    className="rounded-md fs-5 w-full"
                     placeholder="Email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
                 </span>
                 <span className="w-full flex flex-col">
-                  <label htmlFor="" className="fs-6">
+                  {/* <label htmlFor="" className="fs-6">
                     Phone
-                  </label>
-                  <span className="flex w-full gap-2  items-center">
-                    <span className="text-2xl">+1</span>
-                    <input
-                      type="number"
-                      className=" fs-5 w-full"
-                      // style={{ width: "60%" }}
-                      placeholder="Phone"
-                      value={phoneNo}
-                      onChange={(e) => setPhoneNo(e.target.value)}
-                    />
-                  </span>
+                  </label> */}
+                  <PhoneInput
+                    country={"ca"}
+                    enableSearch={true}
+                    inputStyle={{ width: "100%", height: "54px" }}
+                    value={phoneNo}
+                    onChange={(phone) => setPhoneNo(phone)}
+                    required
+                  />
                 </span>
               </span>
               <span className="w-full flex flex-col  p-2 items-center">
-                {selectedCities.length > 0 && (
-                  <>
-                    {" "}
-                    <h2 className="pt-4" style={{ width: "50%" }}>
-                      Cities
-                    </h2>
-                    {selectedCities.map((item) => (
-                      <span
-                        className="fs-4 flex justify-between "
-                        style={{ width: "50%" }}
-                      >
-                        <p>{item.VendorLocation.CitiesAll.city}</p>{" "}
-                        <p
-                          className="cursor-pointer"
-                          style={{ color: "red" }}
-                          onClick={() =>
-                            handleRemoveCity(item.VendorLocation.CitiesAll.id)
-                          }
-                        >
-                          X
-                        </p>
-                      </span>
-                    ))}
-                  </>
-                )}
-
                 <span
-                  className="d-flex justify-between align-items-end"
-                  style={{ width: "50%" }}
+                  className="d-flex gap-2 justify-between"
+                  // style={{ width: "50%" }}
                 >
-                  <span className="">
-                    <CFormLabel className=" fs-4">Cities</CFormLabel>
-                    <CFormSelect
-                      className="simple-input w-52"
-                      style={{ width: "200px" }}
-                      type="text"
-                      name="city_id"
-                      required
-                      onChange={(e) => {
-                        if (selectedKeys.includes(e.target.value)) {
-                          return;
-                        }
-                        setSelectedKeys([...selectedKeys, e.target.value]);
+                  <span className="flex flex-col">
+                    <p className="font-semibold fs-5">
+                      {" "}
+                      Assign Driver Location
+                    </p>
+                    <p className="font-semibold">
+                      Which locations does the driver work for?
+                    </p>
+                    <Autocomplete
+                      multiple
+                      id="checkboxes-tags-demo"
+                      options={options}
+                      disableCloseOnSelect
+                      value={selectedCities.map((item) => ({
+                        label: `${item.VendorLocation?.location_name}`,
+                        value: `${item.VendorLocation.location_name}`,
+                        id: item.id,
+                      }))}
+                      onChange={(e, value) => {
+                        const data = value.map((item) => {
+                          const city = cities.find((val) => val.id === item.id);
+                          return city;
+                        });
+                        setSelectedCities(data);
                       }}
-                    >
-                      <option value="">Select</option>
-                      {cities &&
-                        cities.map((city) => {
-                          if (city) {
-                            return (
-                              <option
-                                disabled={
-                                  selectedKeys.includes(
-                                    city.VendorLocation.CitiesAll.city
-                                  )
-                                    ? true
-                                    : false
-                                }
-                                key={city.id}
-                                value={city.VendorLocation.CitiesAll.city}
-                              >
-                                {city.VendorLocation.CitiesAll.state}-
-                                {city.VendorLocation.CitiesAll.city}
-                              </option>
-                            );
-                          }
-                        })}
-                    </CFormSelect>
+                      getOptionLabel={(option) => option.label}
+                      renderOption={(props, option, { selected }) => {
+                        const { key, ...optionProps } = props;
+                        return (
+                          <li key={key} {...optionProps}>
+                            <Checkbox
+                              icon={icon}
+                              checkedIcon={checkedIcon}
+                              style={{ marginRight: 8 }}
+                              checked={selected}
+                            />
+                            {option.label}
+                          </li>
+                        );
+                      }}
+                      style={{ width: 300 }}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="Checkboxes"
+                          placeholder="Favorites"
+                        />
+                      )}
+                    />
+
+                    <p>
+                      Onec you select a location, the delivery postal codes will
+                      be automatically be populated on the right. You can remove
+                      areas they don't deliver to by removing specific postal
+                      codes.
+                    </p>
                   </span>
-                  <button
-                    onClick={handleAddCountry}
-                    type="button"
-                    className="border-none text-white  px-4"
-                    style={{ height: "40px", backgroundColor: "#5190fc" }}
-                    data-toggle="modal"
-                    data-target="#exampleModalCenter"
-                  >
-                    Add
-                  </button>
+                  <span>
+                    {selectedCities.length > 0 && (
+                      <span>
+                        <span className="font-semibold text-[16px]">
+                          Assign Delivery Areas
+                        </span>
+                        {selectedCities.map((city, index) => (
+                          <div className="flex flex-col gap-2">
+                            <span className="font-semibold text-[14px]">
+                              {city.VendorLocation.location_name}:
+                            </span>
+                            <span className="flex flex-col gap-1 items-end">
+                              <span
+                                onClick={() =>
+                                  setSelectedCities((pre) =>
+                                    pre.filter(
+                                      (item, ind) => ind != index && { ...item }
+                                    )
+                                  )
+                                }
+                                className="cursor-pointer text-red-500"
+                              >
+                                REMOVE
+                              </span>
+                              <Autocomplete
+                                multiple
+                                id="checkboxes-tags-demo"
+                                options={city.VendorLocation.VendorLocationPostalRegions.map(
+                                  (item) => ({
+                                    label: item.PostalRegion.POSTAL_CODE,
+                                    value: item.PostalRegion.POSTAL_CODE,
+                                    id: item.id,
+                                  })
+                                )}
+                                value={city.VendorLocation.VendorLocationPostalRegions.map(
+                                  (item) => ({
+                                    label: item.PostalRegion.POSTAL_CODE,
+                                    value: item.PostalRegion.POSTAL_CODE,
+                                    id: item.id,
+                                  })
+                                )}
+                                disableCloseOnSelect
+                                onChange={(e, value) => {
+                                  const ids = value.map((item) => item.id);
+
+                                  const postalCodes = selectedCities[
+                                    index
+                                  ].VendorLocation.VendorLocationPostalRegions.filter(
+                                    (item) => ids.includes(item.id)
+                                  );
+                                  setSelectedCities((pre) =>
+                                    pre.map((item, ind) =>
+                                      ind == index
+                                        ? {
+                                            ...item,
+                                            VendorLocation: {
+                                              ...item.VendorLocation,
+                                              VendorLocationPostalRegions:
+                                                postalCodes,
+                                            },
+                                          }
+                                        : { ...item }
+                                    )
+                                  );
+                                }}
+                                getOptionLabel={(option) => option.label}
+                                renderOption={(props, option, { selected }) => {
+                                  const { key, ...optionProps } = props;
+                                  return (
+                                    <li key={key} {...optionProps}>
+                                      <Checkbox
+                                        icon={icon}
+                                        checkedIcon={checkedIcon}
+                                        style={{ marginRight: 8 }}
+                                        checked={selected}
+                                      />
+                                      {option.label}
+                                    </li>
+                                  );
+                                }}
+                                style={{ width: 300 }}
+                                renderInput={(params) => (
+                                  <TextField
+                                    {...params}
+                                    label="Checkboxes"
+                                    placeholder="Favorites"
+                                  />
+                                )}
+                              />
+                            </span>
+                          </div>
+                        ))}
+                      </span>
+                    )}
+                  </span>
                 </span>
               </span>
             </div>
@@ -341,7 +453,6 @@ const DetailCard = (props) => {
     }
   }, [date]);
   const isMobile = window.innerWidth <= 768;
-
   return (
     <div className="mainDiv border  w-full border-dark-subtle p-3 bg-white">
       {/* Top bar */}
@@ -349,7 +460,10 @@ const DetailCard = (props) => {
         <div className="d-flex  flex-col py-4 fw-bold fs-5">
           <span className="d-flex gap-3">
             <FaTruck className="fs-2" />
-            <span className="text-success">{props.info.driver_name}</span>
+            <span className="text-gray-600">
+              {props.info.UserVendor.first_name}{" "}
+              {props.info.UserVendor.last_name}
+            </span>
           </span>
           <span className="d-flex gap-2">
             <p className="text-success ">{completed} Completed</p>

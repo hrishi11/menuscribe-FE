@@ -35,6 +35,10 @@ import { uploadDeliveryImage } from "../../actions/api/Vendor";
 import { GOOGLE_MAPS_API_KEY } from "../../constants";
 import { optimizeRoutes } from "../../actions/customerReducer/CustomerActions";
 import { MapGoogle } from "../../components";
+import DeliveryModal from "../../components/Modals/DeliveryModal";
+import { useDisclosure } from "@nextui-org/react";
+import { MdLocalShipping } from "react-icons/md";
+import { FaRegUserCircle } from "react-icons/fa";
 
 const Delivery = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -58,11 +62,13 @@ const Delivery = () => {
   //map setup start
   const [mapVisible, setMapVisible] = useState(false);
   const [routes, setRoutes] = useState([]);
+  const [modalInfo, setModalInfo] = useState("");
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
   //map setup end
 
   const dispatch = useDispatch();
   useEffect(() => {
-    handleUserRole(["Admin", "Manager", "Rider"]);
+    handleUserRole(["Owner", "Manager", "Rider"]);
   }, []);
   const fetchOrders = async () => {
     try {
@@ -142,7 +148,7 @@ const Delivery = () => {
   ];
 
   const handleSelectedDate = async (date) => {
-    console.log(date.toString());
+    console.log("-----", date.toString());
     try {
       const res = await dispatch(
         getDeliveriesByCreatedDate({ created_date: date.toString() })
@@ -211,8 +217,8 @@ const Delivery = () => {
     months[selectedDate.getMonth()]
   } ${selectedDate.getDate()}`;
 
-  const handleCameraClick = (id) => {
-    console.log("Camera Button clicked");
+  const handleCameraClick = () => {
+    const id = modalInfo?.id;
     setSelectedDelivery(id);
     setCameraModalIsOpen(true);
   };
@@ -258,7 +264,8 @@ const Delivery = () => {
     setCameraModalIsOpen(false);
     setSelectedDelivery("");
   };
-  const handleCallClick = (number) => {
+  const handleCallClick = () => {
+    const number = modalInfo.phone;
     // var phoneNumber = "+1234567890"; // Replace this with the phone number you want to call
     var link = "tel:" + number;
     window.location.href = link;
@@ -365,10 +372,28 @@ const Delivery = () => {
       });
     }
   };
-  console.log(deliveries);
+
+  const handleRunFuction = () => {
+    if (modalInfo.text === "Making call?") {
+      handleCallClick();
+    }
+    // if (modalInfo.text === "Navigate to address?") {
+    //   handleCameraClick();
+    // }
+    if (modalInfo.text === "Take photo?") {
+      handleCameraClick();
+    }
+  };
 
   return (
     <div className="relative no-Selecting-on-md">
+      <DeliveryModal
+        onOpen={onOpen}
+        onOpenChange={onOpenChange}
+        text={modalInfo.text}
+        runFuction={handleRunFuction}
+        isOpen={isOpen}
+      />
       {/* ----------TOP bar date section-------- */}
       <div className="bg-blue flex justify-between items-center text-white rounded py-5x px-10x">
         <span> {getPrevDate}</span>
@@ -413,7 +438,7 @@ const Delivery = () => {
               key={d.id}
               className={`rounded ${
                 d.is_delivered == 1 ? "bg-light-green" : "bg-gray-500"
-              } px-10x py-10x flex justify-between items-center gap-10x my-10x`}
+              } px-10x  shadow-md py-10x flex justify-between items-center gap-10x my-10x`}
               onMouseDown={handleClickStart}
               onMouseMove={(e) => handleDrag(e, d.id, "mouse")}
               onMouseUp={handleClickEnd}
@@ -422,25 +447,33 @@ const Delivery = () => {
               onTouchEnd={handleClickEnd}
             >
               {/*----- Left----- */}
-              <div className="LeftSectionOfEachDelivery">
-                <p className="text-lg my-0 font-medium">
-                  {d.UserCustomer.first_name} {d.UserCustomer.last_name}
-                  <span className="text-sm text-red">
-                    {/* {d.VendorPackage.package_name} */}
+              <div className="flex justify-between w-full">
+                <p className="text-lg my-0 flex flex-col font-medium w-[230px]">
+                  <span className="flex items-center gap-2">
+                    <FaRegUserCircle />
+                    {d.UserCustomer.first_name} {d.UserCustomer.last_name}
                   </span>
+                  <span className="text-sm font-normal ">Order ID: {d.id}</span>
                 </p>
-                <p className="my-0"> Order ID: {d.id}</p>
-                <p className="my-0"> {d.UserCustomer.phone}</p>
+                <p className="my-0 w-[150px] flex items-center gap-2">
+                  {" "}
+                  <MdLocalShipping />
+                  {d.UserCustomer.first_name} {d.UserVendor.last_name}
+                </p>
+                <p className="my-0 w-[150px] flex items-center">
+                  {" "}
+                  {d.UserVendor.phone}
+                </p>
                 {d.CustomerDeliveryAddress ? (
-                  <p className="my-0">
+                  <p className="my-0 w-[200px]">
                     {" "}
                     {d.CustomerDeliveryAddress.address},{" "}
                     {d.CustomerDeliveryAddress.CitiesAll.city}
                   </p>
                 ) : (
-                  <p>N/A</p>
+                  <p className="w-[200px]">N/A</p>
                 )}
-                <div className=" my-0">
+                <div className=" my-0 w-[150px] flex items-center">
                   <input
                     type="checkbox"
                     checked={d.is_delivered == 1}
@@ -455,7 +488,13 @@ const Delivery = () => {
                 <div className="flex gap-5x">
                   <CButton
                     className="border-none outline-none bg-green rounded-full"
-                    onClick={() => handleCallClick(d.UserCustomer.phone)}
+                    onClick={() => {
+                      setModalInfo({
+                        text: "Make call?",
+                        phone: d.UserCustomer.phone,
+                      });
+                      onOpen();
+                    }}
                   >
                     <CIcon icon={cilPhone} size="xl" />
                   </CButton>
@@ -480,7 +519,12 @@ const Delivery = () => {
                 ) : (
                   <CButton
                     className="border-none outline-none bg-blue rounded-full"
-                    onClick={() => handleCameraClick(d.id)}
+                    onClick={() => {
+                      {
+                        setModalInfo({ text: "Take photo?", id: d.id });
+                        onOpen();
+                      }
+                    }}
                   >
                     <CIcon icon={cilCamera} size="xl" />
                   </CButton>

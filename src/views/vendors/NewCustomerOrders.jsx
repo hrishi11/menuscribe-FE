@@ -28,7 +28,7 @@ const NewCustomerOrder = () => {
   // const [vendorPackageList, setVendorPackageList] = useState([]);
   const [selectedDate, setSelectedDate] = useState("");
   useEffect(() => {
-    handleUserRole(["Admin", "Manager"]);
+    handleUserRole(["Owner", "Manager"]);
   }, []);
   useEffect(() => {
     fetchData();

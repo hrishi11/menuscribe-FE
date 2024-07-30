@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./TeamEmployee.css";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import {
   getEmployees,
@@ -14,32 +14,48 @@ import EmployeeLocationAccess from "../TeamEmployee/EmployeeLocationAccess/Emplo
 import { CButton, CFormInput, CFormLabel, CFormSelect } from "@coreui/react";
 import SelectAnEmployee from "./SelectAnEmployee/SelectAnEmployee";
 import { Toast } from "../../../components/app/Toast";
+import { getVendorRoles } from "../../../actions/vendorReducers/VendorActions";
 
 const TeamEmployee = () => {
   const [access, setAccess] = useState(false);
   const [allEmployees, setAllEmployees] = useState([]);
-  const [selectedEmployee, setSelectedEmployee] = useState({ id: 0 });
+  const [selectedEmployee, setSelectedEmployee] = useState({
+    id: 0,
+    UserVendor: {},
+    VendorEmployeeLocations: [],
+  });
   const [allVendorLocations, setAllVendorLocations] = useState([]);
   const [vendorLocations, setVendorLocations] = useState([]);
+  const [vendorSetting, setVendorSetitng] = useState({});
+  const [roles, setRoles] = useState([]);
   const { id } = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const fetchEmployees = async () => {
     try {
-      const res = await dispatch(getEmployees());
-      console.log("000000", res.data);
-      setAllEmployees(res.data);
-      const employee = res.data.find((em) => em.id == parseInt(id));
-      setSelectedEmployee(employee);
+      const [res, resRoles] = await Promise.all([
+        dispatch(getEmployees()),
+        dispatch(getVendorRoles()),
+      ]);
+      setRoles(resRoles.data);
+      if (id) {
+        setAllEmployees(res.data);
+        setVendorSetitng(res.settings);
+
+        const employee = res.data.find((em) => em.id == parseInt(id));
+        setSelectedEmployee(employee);
+      }
     } catch (error) {
       console.log(error);
     }
   };
 
   const filterLocation = () => {
-    if (!selectedEmployee.VendorEmployeeLocations) {
+    if (!selectedEmployee?.VendorEmployeeLocations) {
       return;
     }
+
     const selectedLocationsIds = selectedEmployee.VendorEmployeeLocations.map(
       (loc) => loc.vendor_location_id
     );
@@ -53,6 +69,7 @@ const TeamEmployee = () => {
     const newLocation = newLocationsIds.map((id) =>
       allVendorLocations.find((loca) => loca.id === id)
     );
+
     setVendorLocations(newLocation);
   };
 
@@ -66,7 +83,7 @@ const TeamEmployee = () => {
   };
   const validateOWNER = async () => {
     try {
-      const res = await dispatch(validateEmployee({ role: "OWNER" }));
+      const res = await dispatch(validateEmployee({ role: "Owner" }));
       setAccess(res.access);
     } catch (error) {
       console.log(error);
@@ -82,18 +99,18 @@ const TeamEmployee = () => {
   }, [id]);
 
   useEffect(() => {
-    selectedEmployee.id !== 0 && filterLocation();
-    console.log("filter run");
-  }, [selectedEmployee?.VendorEmployeeLocations]);
+    // selectedEmployee.id !== 0 &&
+    filterLocation();
+  }, [selectedEmployee?.VendorEmployeeLocations, allVendorLocations]);
 
   const handleSave = async () => {
     try {
       const res = await dispatch(setEmployee(selectedEmployee));
-      console.log(res);
       Toast({
         message: "Customer updated successfully",
         type: "success",
       });
+      navigate(`/manage/team/${res.emp_id}`);
     } catch (error) {
       console.log(error);
     }
@@ -110,22 +127,24 @@ const TeamEmployee = () => {
         setSelectedEmployee={setSelectedEmployee}
       />
 
-      {selectedEmployee && selectedEmployee?.id !== 0 && (
+      {selectedEmployee && (
         <GeneralSettings
           selectedEmployee={selectedEmployee}
           setSelectedEmployee={setSelectedEmployee}
+          roles={roles}
         />
       )}
 
       {/* ----------- Employee pages and location access------- */}
       <div className="employeePageLocationContainer">
-        {selectedEmployee && selectedEmployee.id !== 0 && (
+        {selectedEmployee && (
           <EmployeePageAccess
             selectedEmployee={selectedEmployee}
+            vendorSetting={vendorSetting}
             setSelectedEmployee={setSelectedEmployee}
           />
         )}
-        {selectedEmployee && selectedEmployee.id !== 0 && (
+        {selectedEmployee && (
           <EmployeeLocationAccess
             selectedEmployee={selectedEmployee}
             setSelectedEmployee={setSelectedEmployee}
@@ -135,7 +154,7 @@ const TeamEmployee = () => {
         )}
       </div>
       {/* --------Submit Button----- */}
-      {selectedEmployee && selectedEmployee.id !== 0 && (
+      {selectedEmployee && (
         <div className="text-center my-20x">
           <CButton onClick={handleSave} className="">
             Save

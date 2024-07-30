@@ -452,6 +452,7 @@ const AddCustomer = () => {
       console.log(error);
     }
   };
+
   const handleAddCustomer = (onClose) => {
     try {
       const res = dispatch(addCustomerLink({ id: existedUser.id }));
@@ -460,6 +461,7 @@ const AddCustomer = () => {
       console.log(error);
     }
   };
+
   const fetchVendorLocations = async () => {
     try {
       const response = await dispatch(getVendorLocations());
@@ -470,6 +472,7 @@ const AddCustomer = () => {
     }
   };
   const { Option } = Select;
+
   function convertTo12HourFormat(time24) {
     // Split the time into hours, minutes, and seconds
     const [hours, minutes, seconds] = time24.split(":").map(Number);
@@ -774,10 +777,16 @@ const AddCustomer = () => {
                             onLoad={(autocomplete) => {
                               setAutocomplete(autocomplete);
                             }}
+                            options={{
+                              componentRestrictions: { country: "ca" },
+                            }}
                             className="lg:w-full  max-sm:w-full"
                             onPlaceChanged={() => {
                               autocomplete?.getPlace() &&
                                 handlePlaceSelect(autocomplete.getPlace());
+                              google.maps.event.clearInstanceListeners(
+                                autocomplete
+                              );
                             }}
                           >
                             <CFormInput
@@ -837,7 +846,7 @@ const AddCustomer = () => {
                               </div>
                             }
                             // trigger="click"
-                            open={formData.address.postalError}
+                            open={formData.address.postalError ? true : false}
                           >
                             <CFormInput
                               // className="simple-input"

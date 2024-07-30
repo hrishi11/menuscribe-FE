@@ -21,7 +21,7 @@ const Package = ({ popup, setPopup, pack }) => {
         <p className="m-0 py-20x text-center font-semibold px-10x">
           {VendorPackageDefaultItems.map(
             (item, i) =>
-              `${item.item_name} ${
+              `${item.item_name} - ${item.quantity} ${
                 i !== VendorPackageDefaultItems.length - 1 ? "+" : ""
               } `
           )}

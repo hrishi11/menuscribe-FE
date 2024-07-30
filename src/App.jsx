@@ -12,6 +12,10 @@ import SelectPackage from "./views/customer/SelectPackage/SelectPackage";
 import ManagerSignup from "./views/vendors/Manager Signup/ManagerSignup";
 import DailyMenu from "./views/pages/DailyMenu/DailyMenu";
 import CustomerSignup from "./views/customer/Customer Signup/CustomerSignup";
+import Orders from "./views/customer/Orders/Orders";
+import PackageSelector from "./views/customer/PackageSelector/PackageSelector";
+import TpHome from "./views/customer/TpHome/TpHome";
+import CustomerBilling from "./views/customer/Billing/Billing";
 
 const loading = (
   <div className="pt-3 text-center">
@@ -169,6 +173,26 @@ class App extends Component {
                 path="/profile"
                 element={
                   <CustomerProtectedRoute element={<CustomerProfile />} />
+                }
+              />
+              <Route
+                path="/orders"
+                element={<CustomerProtectedRoute element={<Orders />} />}
+              />
+              <Route
+                path="/tp-home"
+                element={<CustomerProtectedRoute element={<TpHome />} />}
+              />
+              <Route
+                path="/billing"
+                element={
+                  <CustomerProtectedRoute element={<CustomerBilling />} />
+                }
+              />
+              <Route
+                path="/package-selector"
+                element={
+                  <CustomerProtectedRoute element={<PackageSelector />} />
                 }
               />
               <Route

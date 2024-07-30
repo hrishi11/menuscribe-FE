@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
+  changeCustomerPackage,
+  getAllVendorPackages,
   getCustomerPaymentLog,
   getSubscriptions,
   getUpcomingOrders,
@@ -31,6 +33,17 @@ import {
   getVendorCustomerOrders,
 } from "../../../actions/customerReducer/CustomerActions";
 
+import { Button, Dropdown, message, Space, Tooltip } from "antd";
+import { DownOutlined, UserOutlined } from "@ant-design/icons";
+import PackageItem from "../../pages/DailyMenu/PackageItem/PackageItem";
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
+} from "@nextui-org/react";
 export default function ViewCustomer() {
   const [orders, setOrders] = useState([]);
   const { id } = useParams();
@@ -44,6 +57,31 @@ export default function ViewCustomer() {
   const [changeTrigger, setChangeTrigger] = useState(false);
 
   const dispatch = useDispatch();
+  const items = [
+    {
+      label: "1st menu item",
+      key: "1",
+      icon: <UserOutlined />,
+    },
+    {
+      label: "2nd menu item",
+      key: "2",
+      icon: <UserOutlined />,
+    },
+    {
+      label: "3rd menu item",
+      key: "3",
+      icon: <UserOutlined />,
+      danger: true,
+    },
+    {
+      label: "4rd menu item",
+      key: "4",
+      icon: <UserOutlined />,
+      danger: true,
+      disabled: true,
+    },
+  ];
 
   const colors = [
     "bg-red-500",
@@ -63,6 +101,11 @@ export default function ViewCustomer() {
 
   const [customerAddresses, setCustomerAddresses] = useState();
   const [loader, setLoader] = useState(false);
+  const [packages, setPackages] = useState([]);
+  const [dropdownItems, setDropdownItems] = useState([]);
+  const [msgInfo, setMsgInfo] = useState();
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
   useEffect(() => {
     fetchData();
   }, [dispatch, vendorData.id, changeTrigger]);
@@ -72,11 +115,12 @@ export default function ViewCustomer() {
     const color = colors[randomIndex];
     setSelectedColor(color);
     fetchOrders();
-    fetchSubscription();
+    // fetchSubscription();
     fetchCustomerPaymentLog();
   }, []);
   useEffect(() => {
-    fetchSubscription();
+    // fetchSubscription();
+    fetchData();
   }, [updateTrigger]);
 
   function convertTimeUnit(unit) {
@@ -92,14 +136,27 @@ export default function ViewCustomer() {
   const fetchData = async () => {
     try {
       setLoader(true);
-      const [userResponse] = await Promise.all([
-        dispatch(getVendorCustomerAddress(vendorData.id)),
-      ]);
+      const [userResponse, packagesResposne, subscriptionResponse] =
+        await Promise.all([
+          dispatch(getVendorCustomerAddress(vendorData.id)),
+          dispatch(getAllVendorPackages()),
+          dispatch(getSubscriptions(id)),
+        ]);
       setCustomerAddresses(userResponse.data);
-      +(
-        // setCustomerOrders(fetchOrders.data);
-        setLoader(false)
+      setPackages(
+        packagesResposne.data.map((item) => ({
+          label: item.package_name,
+          key: item.id,
+          id: item.id,
+        }))
       );
+      setSubscription(
+        subscriptionResponse.data.map((item) => ({ ...item, index: 0 }))
+      );
+
+      // setCustomerOrders(fetchOrders.data);
+      setLoader(false);
+
       setCustomerId(vendorData.id);
     } catch (error) {
       console.error("Error fetching packages:", error);
@@ -126,15 +183,6 @@ export default function ViewCustomer() {
     }
   };
 
-  const fetchSubscription = async () => {
-    try {
-      const response = await dispatch(getSubscriptions(id));
-      console.log(response);
-      setSubscription(response.data.map((item) => ({ ...item, index: 0 })));
-    } catch (error) {
-      console.log(error);
-    }
-  };
   const fetchCustomerPaymentLog = async () => {
     try {
       const response = await dispatch(getCustomerPaymentLog(id));
@@ -162,8 +210,105 @@ export default function ViewCustomer() {
     }
   }
 
+  const handleMenuClick = async (info) => {
+    try {
+      const response = await dispatch(changeCustomerPackage(info));
+      fetchData();
+      fetchOrders();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleButtonClick = (e) => {
+    message.info("Click on left button.");
+    console.log("click left button", e);
+  };
   return (
     <div className="flex justify-between w-full gap-3  max-sm:flex-wrap">
+      {/* Modal */}
+      <>
+        <Modal
+          backdrop="opaque"
+          isOpen={isOpen}
+          onOpenChange={onOpenChange}
+          className="text-black"
+          size={"xl"}
+          radius="lg"
+          classNames={{
+            body: "py-6 z-40",
+
+            backdrop: "bg-[#292f46]/50 backdrop-opacity-40",
+            base: "border-[#292f46] bg-[#e1e2e3] dark:bg-[#19172c] text-[#a8b0d3]",
+            header: "border-b-[1px] bg-[#94d8ff]",
+            footer: "border-t-[1px] bg-[#94d8ff]",
+            closeButton: "hover:bg-white/5 active:bg-white/10",
+          }}
+        >
+          <ModalContent>
+            {(onClose) => (
+              <>
+                <ModalHeader className="flex flex-col gap-1">
+                  Switch Package
+                </ModalHeader>
+                <ModalBody className="">
+                  <div>
+                    A message will be sent to the user letting them now that
+                    their package has been switched. Please review the message
+                    below.
+                  </div>
+                  <div className="bg-white rounded-lg p-3">
+                    <p>Dear {msgInfo.customerName},</p>
+                    <p>
+                      {msgInfo.vendor} is notifying you that your package has be
+                      switched. Any custom item that you may have selected for
+                      future meals may have been removed, and you may need to
+                      reselect them. Your new package details are follows:
+                    </p>
+                    <p className="flex flex-col">
+                      <span className="font-semibold">Old Package:</span>{" "}
+                      <span>{msgInfo.oldPackage_name}</span>{" "}
+                    </p>
+                    <p className="flex flex-col">
+                      <span className="font-semibold">New Package:</span>{" "}
+                      <span>{msgInfo.newPackage_name}</span>{" "}
+                    </p>
+                    <p>
+                      If you have any questions, please contact {msgInfo.vendor}
+                    </p>
+                    {/* <button className="bg-[#1674f0] px-4 py-2 text-white rounded">
+                      Renew Package
+                    </button> */}
+                  </div>
+                </ModalBody>
+                <ModalFooter className="w-full">
+                  <div>
+                    NOTE: To reduce customer spam, you can only send 1
+                    notifications total
+                  </div>
+                  <Button
+                    color="foreground"
+                    variant="light"
+                    className={"bg-white"}
+                    onClick={() => onClose()}
+                  >
+                    Close
+                  </Button>
+                  <Button
+                    className="bg-[#1674f0] px-5 text-white shadow-lg shadow-indigo-500/20"
+                    onClick={() => {
+                      handleMenuClick(msgInfo);
+                      onClose();
+                    }}
+                  >
+                    Send Message
+                  </Button>
+                </ModalFooter>
+              </>
+            )}
+          </ModalContent>
+        </Modal>
+      </>
       <div className="flex flex-col w-[68%] max-sm:gap-3">
         <UserInfo
           userInfo={userInfo}
@@ -182,9 +327,41 @@ export default function ViewCustomer() {
                 <div>
                   <div className="flex justify-between pt-2">
                     <div className="flex flex-col ">
-                      <span className="font-semibold">
-                        {item.id}-{item.VendorPackage?.package_name}
-                      </span>
+                      <div className="flex gap-3">
+                        <span className="font-semibold">
+                          {item.id}-{item.VendorPackage?.package_name}
+                        </span>
+                        <span>
+                          <Dropdown.Button
+                            menu={{
+                              items: packages.map((pack) => {
+                                return pack.id == item.package_id
+                                  ? { ...pack, danger: true }
+                                  : pack;
+                              }),
+
+                              onClick: (e) => {
+                                setMsgInfo({
+                                  customerPkg_id: item.id,
+                                  package_id: e.key,
+                                  customerName: `${item.UserCustomer.first_name} ${item.UserCustomer.last_name}`,
+                                  email: item.UserCustomer.email,
+                                  oldPackage_name:
+                                    item.VendorPackage?.package_name,
+                                  newPackage_name: packages.find(
+                                    (item) => item.key == e.key
+                                  ).label,
+                                  vendor: item.VendorPackage.Vendor.vendor_name,
+                                });
+                                onOpen();
+                              },
+                            }}
+                            onClick={handleButtonClick}
+                          >
+                            Switch Package
+                          </Dropdown.Button>
+                        </span>
+                      </div>
                       <span className="text-red-500">
                         {item.VendorPackagePrice?.method.toUpperCase()}-
                         {item.VendorPackagePrice?.frequency.toUpperCase()}
@@ -217,22 +394,6 @@ export default function ViewCustomer() {
                       </Tag>
                     </div>
                   </div>
-
-                  {/* {show == index ? (
-                    <button
-                      className="text-blue-600"
-                      onClick={() => setShow(-1)}
-                    >
-                      hide
-                    </button>
-                  ) : (
-                    <button
-                      className="text-blue-600"
-                      onClick={() => setShow(index)}
-                    >
-                      show
-                    </button>
-                  )} */}
                 </div>
                 <div
                   className={` bg-gray-400 border-2 w-full p-0  flex  items-center`}

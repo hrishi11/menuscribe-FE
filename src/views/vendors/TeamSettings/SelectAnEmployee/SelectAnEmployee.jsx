@@ -14,6 +14,7 @@ const SelectAnEmployee = ({
     // setSelectedEmployee(selectedEmp);
     navigate(`/manage/team/${e.target.value}`);
   };
+  console.log("allemp", allEmployees);
 
   return (
     <div className="">
@@ -28,7 +29,8 @@ const SelectAnEmployee = ({
         <option value="0">Select</option>
         {allEmployees.map((employee) => (
           <option value={employee.id} key={employee.id}>
-            {employee.UserVendor.first_name}
+            {employee.UserVendor?.first_name} {employee.UserVendor?.last_name} (
+            {employee.VendorRole?.role})
           </option>
         ))}
       </CFormSelect>

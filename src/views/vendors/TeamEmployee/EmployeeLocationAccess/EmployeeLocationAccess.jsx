@@ -20,15 +20,27 @@ const EmployeeLocationAccess = ({
       const selectedLocation = vendorLocations.find(
         (loca) => loca.id == e.target.value
       );
+      // const reqObj = {
+      //   VendorEmployeeId: selectedEmployee.id,
+      //   location: selectedLocation,
+      // };
+
+      // const res = await dispatch(setEmployeeLocation(reqObj));
+      // const newLocations = [
+      //   ...selectedEmployee.VendorEmployeeLocations,
+      //   { ...res.data, VendorLocation: selectedLocation },
+      // ];
+      console.log("selectedLocation", selectedLocation);
       const reqObj = {
-        VendorEmployeeId: selectedEmployee.id,
-        location: selectedLocation,
+        vendor_employee_id: selectedEmployee.id,
+        vendor_location_id: selectedLocation.id,
+        VendorLocation: selectedLocation,
       };
-      const res = await dispatch(setEmployeeLocation(reqObj));
       const newLocations = [
         ...selectedEmployee.VendorEmployeeLocations,
-        { ...res.data, VendorLocation: selectedLocation },
+        { ...reqObj },
       ];
+
       setSelectedEmployee({
         ...selectedEmployee,
         VendorEmployeeLocations: newLocations,

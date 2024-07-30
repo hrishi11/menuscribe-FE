@@ -67,16 +67,6 @@ export default function PaymentTable({
               setPageSize(size);
             }}
           />
-          {/* <Pagination
-            // isCompact
-            showControls
-            // showShadow
-            key={"secondary"}
-            // color="secondary"
-            page={page}
-            total={totalPages}
-            onChange={(page) => setPage(page)}
-          /> */}
         </div>
       }
       classNames={{

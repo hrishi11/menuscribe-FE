@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./PrepareItem.css";
 import {
   CAccordion,
@@ -17,6 +17,10 @@ const PrepareItem = ({ itemKey, item, fetchOrders }) => {
   const { id, UserCustomer, VendorPackage, CustomerPackage } = item;
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    console.log("casd", VendorPackage);
+  }, [VendorPackage]);
 
   const handleMakeDeliver = async () => {
     try {
@@ -44,7 +48,7 @@ const PrepareItem = ({ itemKey, item, fetchOrders }) => {
             </span>
             <br />
             <span className="text-gray text-sm">
-              {CustomerPackage.pickup_delivery === 1
+              {CustomerPackage?.pickup_delivery === 1
                 ? CustomerPackage?.VendorLocation
                   ? `Pickup from ${CustomerPackage?.VendorLocation?.location_name}`
                   : "N/A"
@@ -86,7 +90,7 @@ const PrepareItem = ({ itemKey, item, fetchOrders }) => {
                 return (
                   <div className="multiple-items-container" key={item.id}>
                     {item.VendorPackageMenuItems.map((mi, i) => (
-                      <span key={mi.id} className="text-gray">
+                      <span key={mi.id} className="text-gray ">
                         {mi.menu_item_name}
                         {i !== item.VendorPackageMenuItems.length - 1 && "/"}
                       </span>
@@ -105,7 +109,12 @@ const PrepareItem = ({ itemKey, item, fetchOrders }) => {
                   </div>
                 );
               } else {
-                return <li key={item.id}> {item.item_name}</li>;
+                return (
+                  <li className="" key={item.id}>
+                    {" "}
+                    {item.item_name} - {item.quantity}
+                  </li>
+                );
               }
             })}
           </ul>

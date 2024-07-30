@@ -66,7 +66,10 @@ const OrderItem = ({ item, order }) => {
         //   checked={check[item.item_name]}
         //   onChange={handleCheckChange}
         // />
-        <span> {item.item_name}</span>
+        <span>
+          {" "}
+          {item.item_name} - {item.quantity}
+        </span>
       )}
 
       {VendorPackageMenuItems.length > 1 ? (

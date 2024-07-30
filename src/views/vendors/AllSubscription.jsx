@@ -10,6 +10,7 @@ import {
   Chip,
   Tooltip,
   getKeyValue,
+  Input,
 } from "@nextui-org/react";
 import { IoSendSharp } from "react-icons/io5";
 import { BiSolidDownArrow } from "react-icons/bi";
@@ -30,9 +31,11 @@ import {
   Button,
   useDisclosure,
 } from "@nextui-org/react";
+import { globalSearch } from "../../utils/Helper";
 
 export default function AllSubscription() {
   const [subscriptionInfo, setSubscriptionInfo] = useState([]);
+  const [info, setInfo] = useState([]);
   const [sortDir, setSortDir] = useState("asc");
   const [sortCol, setSortCol] = useState("final_order");
   const [CurrentCol, setCurrentCol] = useState("");
@@ -50,14 +53,14 @@ export default function AllSubscription() {
     try {
       const response = await dispatch(getSubscriptionInfo({}));
       console.log(response.data);
-      setSubscriptionInfo(
-        response.data.sort((a, b) => {
-          return sorting(
-            getMaxDate(a.CustomerOrders.map((item) => item.order_date)),
-            getMaxDate(b.CustomerOrders.map((item) => item.order_date))
-          );
-        })
-      );
+      const subs = response.data.sort((a, b) => {
+        return sorting(
+          getMaxDate(a.CustomerOrders.map((item) => item.order_date)),
+          getMaxDate(b.CustomerOrders.map((item) => item.order_date))
+        );
+      });
+      setSubscriptionInfo(subs);
+      setInfo(subs);
       setSubscriptionData(response.data);
       // setSortDir("asc");
       // setSortCol("final_order");
@@ -250,7 +253,6 @@ export default function AllSubscription() {
   return (
     <div>
       <>
-        {/* <Button onPress={onOpen} color="secondary">Open Modal</Button> */}
         <Modal
           backdrop="opaque"
           isOpen={isOpen}
@@ -315,6 +317,22 @@ export default function AllSubscription() {
           </ModalContent>
         </Modal>
       </>
+      <div className="flex w-full justify-between items-center my-3">
+        <p className="text-[28px]">Pickup</p>
+        <Input
+          type="text"
+          variant="bordered"
+          className="w-[400px] bg-white rounded-xl "
+          label="Search"
+          onChange={(event) => {
+            if (event.target.value) {
+              setSubscriptionInfo(globalSearch(info, event.target.value));
+            } else {
+              setSubscriptionInfo(info);
+            }
+          }}
+        />
+      </div>
       <Table aria-label="Example table with custom cells">
         <TableHeader columns={columns2}>
           {(column) => (

@@ -22,10 +22,13 @@ import { cilCheck } from "@coreui/icons";
 import { getQrvalue } from "../../actions/customerReducer/CustomerSlice";
 import { useNavigate } from "react-router-dom";
 import PickupTable from "./Pickup/Comp/Table";
+import { Input } from "@nextui-org/react";
+import { globalSearch } from "../../utils/Helper";
 
 const Pickups = () => {
   const [orderId, setOrderId] = useState("");
   const [order, setOrder] = useState();
+  const [orderInfo, setOrderInfo] = useState();
   const [popup, setPopup] = useState(false);
   const [addItem, setAddItem] = useState({ status: false, item: { id: "" } });
   const [allOrders, setAllOrders] = useState([]);
@@ -40,6 +43,7 @@ const Pickups = () => {
       const response = await dispatch(getVendorOrders());
       console.log(response.response);
       setAllOrders(response.response);
+      setOrderInfo(response.response);
     } catch (error) {
       console.log(error);
     }
@@ -262,11 +266,24 @@ const Pickups = () => {
 
       {/* Pickup */}
       <div className="w-[65%]">
-        <p className="text-[28px]">Pickup</p>
+        <div className="flex w-full justify-between items-center my-3">
+          <p className="text-[28px]">Pickup</p>
+          <Input
+            type="text"
+            variant="bordered"
+            className="w-[400px] bg-white rounded-xl "
+            label="Search"
+            onChange={(event) => {
+              if (event.target.value) {
+                setAllOrders(globalSearch(orderInfo, event.target.value));
+              } else {
+                setAllOrders(orderInfo);
+              }
+            }}
+          />
+        </div>
+
         <div className="w-full bg-white">
-          {/* {
-            allOrders &&
-          } */}
           <PickupTable
             orders={allOrders}
             setOrders={setAllOrders}

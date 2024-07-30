@@ -213,8 +213,13 @@ const CustomerAddressEdit = ({
                         setAutocomplete(autocomplete);
                       }}
                       onPlaceChanged={() => {
-                        autocomplete?.getPlace() &&
+                        if (autocomplete?.getPlace()) {
                           handlePlaceSelect(autocomplete.getPlace());
+                        }
+                        google.maps.event.clearInstanceListeners(autocomplete);
+                      }}
+                      options={{
+                        componentRestrictions: { country: "ca" },
                       }}
                     >
                       <CFormInput
@@ -223,6 +228,12 @@ const CustomerAddressEdit = ({
                         name="address"
                         placeholder="Enter your address"
                         required
+                        onBlur={() => {
+                          if (autocomplete) {
+                            // Clear the autocomplete suggestion dropdown
+                            autocomplete.setFields([]);
+                          }
+                        }}
                         onChange={handleFormData}
                         value={addressId.address || ""}
                       />
